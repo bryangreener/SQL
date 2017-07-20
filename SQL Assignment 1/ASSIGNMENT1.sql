@@ -2,28 +2,13 @@
 Bryan Greener
 Assignment 1
 */
-use computer;
-LOAD DATA LOCAL INFILE 'C:/Users/Bryan/Desktop/SQL Assignment 1/product.txt' INTO TABLE Product 
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\r\n';
-LOAD DATA LOCAL INFILE 'C:/Users/NGY/Documents/School/DBMS/SQL/SQL Assignment 1/pcTEMP.txt' INTO TABLE PC
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\r\n';
-LOAD DATA LOCAL INFILE 'C:/Users/Bryan/Desktop/SQL Assignment 1/laptop.txt' INTO TABLE Laptop
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\r\n';
-LOAD DATA LOCAL INFILE 'C:/Users/Bryan/Desktop/SQL Assignment 1/printer.txt' INTO TABLE Printer
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\r\n';
-
-
 
 SELECT *
 FROM computer.PC;
 
 # 1
 SELECT DISTINCT model, speed, hdisk
-FROM PC
+FROM computer.PC
 WHERE PC.price < '1000.00';
 
 # 2
@@ -53,24 +38,23 @@ WHERE hdisk >= 30;
 
 # 7
 SELECT DISTINCT PC.model, PC.price
-FROM Product P, PC
+FROM computer.Product P, computer.PC
 WHERE P.maker='B' AND P.model=PC.model
 UNION
 SELECT DISTINCT L.model, L.price
-FROM Product P, Laptop L
+FROM computer.Product P, computer.Laptop L
 WHERE P.maker='B' AND P.model=L.model
 UNION
 SELECT DISTINCT PRI.model, PRI.price
-FROM Product P, Printer PRI
+FROM computer.Product P, computer.Printer PRI
 WHERE P.maker='B' AND P.model=PRI.model;
 
 # 8
+SELECT DISTINCT P.maker
+FROM computer.Product P NATURAL JOIN computer.Laptop
+WHERE P.maker NOT IN (
 SELECT DISTINCT maker
-FROM Product P
-WHERE P.type='Laptop' NOT IN (
-SELECT DISTINCT maker
-FROM Product P
-WHERE P.type='PC');
+FROM computer.Product P NATURAL JOIN computer.PC);
 
 # 9
 SELECT DISTINCT PC.hdisk
@@ -83,6 +67,56 @@ FROM PC p1 JOIN PC p2
 WHERE p1.speed=p2.speed AND p1.ram=p2.ram AND p1.model < p2.model;
 
 # 11
-SELECT DISTINCT model
-FROM (PC JOIN Laptop) p1, (PC JOIN Laptp) p2, (PC JOIN Laptop) p3
-WHERE 
+SELECT DISTINCT s1.maker
+FROM
+	((
+	SELECT model
+	FROM PC P
+	WHERE speed >= 3.00
+	UNION
+	SELECT model
+	FROM Laptop L
+	WHERE speed >= 3.00
+	) T
+	NATURAL JOIN product s1,
+    (
+    SELECT model
+    FROM PC P2
+    WHERE speed >= 3.00
+    UNION
+    SELECT model
+    from Laptop L2
+    WHERE speed >= 3.00
+    ) T2
+    NATURAL JOIN product s2 )
+WHERE s1.maker = s2.maker AND s1.model <> s2.model;
+
+# 12
+SELECT DISTINCT maker
+FROM PC NATURAL JOIN Product
+WHERE PC.speed >= 3.00;
+
+# 13
+SELECT DISTINCT p1.model
+FROM computer.Printer p1
+WHERE p1.price > ( SELECT DISTINCT price FROM computer.Printer );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
