@@ -3,8 +3,8 @@ Bryan Greener
 Assignment 1
 */
 
-SELECT *
-FROM computer.PC;
+# START USING COMPUTER DB
+use computer;
 
 # 1
 SELECT DISTINCT model, speed, hdisk
@@ -97,17 +97,115 @@ FROM PC NATURAL JOIN Product
 WHERE PC.speed >= 3.00;
 
 # 13
-SELECT DISTINCT p1.model
-FROM computer.Printer p1
-WHERE p1.price > ( SELECT DISTINCT price FROM computer.Printer );
+SELECT model
+FROM computer.printer
+WHERE price >= ALL( SELECT price FROM computer.printer );
 
+# 14
+SELECT model
+FROM computer.Laptop
+WHERE laptop.speed < ALL ( SELECT speed FROM computer.PC );
 
+# 15
+SELECT model
+FROM ((
+	SELECT model, price
+    FROM computer.PC )
+    UNION (
+    SELECT model, price
+    FROM computer.Laptop )
+    UNION (
+	SELECT model, price
+    FROM computer.Printer )) AS t1
+WHERE price >= ALL ( SELECT price FROM (
+		((
+		SELECT model, price
+		FROM computer.PC )
+		UNION (
+		SELECT model, price
+		FROM computer.Laptop )
+		UNION (
+		SELECT model, price
+		FROM computer.Printer ))) AS t2);
+        
+# 16
+SELECT maker
+FROM computer.product JOIN computer.printer ON product.model = printer.model
+WHERE printer.price = ( SELECT MIN(price) FROM printer WHERE color=TRUE ) AND printer.color=TRUE;
+    
+# 17
+SELECT DISTINCT maker
+FROM computer.PC JOIN computer.Product ON PC.model = Product.model
+WHERE PC.speed =
+	( SELECT MAX(speed) FROM computer.PC WHERE PC.ram =
+    ( SELECT MIN(ram) FROM computer.PC ));
+    
+# 18
+SELECT AVG(speed)
+FROM computer.PC;
 
+# 19
+SELECT AVG(speed)
+FROM computer.Laptop
+WHERE price > 1000.00;
 
+# 20
+SELECT AVG(price)
+FROM computer.product, computer.pc
+WHERE product.model = pc.model AND maker = 'A';
 
+# 21
+SELECT AVG(price)
+FROM ((
+	SELECT price
+	FROM computer.product, computer.pc
+    WHERE product.model = pc.model AND maker = 'D' )
+    UNION (
+    SELECT price
+    FROM computer.product, computer.laptop
+    WHERE product.model = laptop.model AND maker = 'D' )) AS t1;
 
+# 22
+SELECT speed, AVG(price)
+FROM computer.PC
+GROUP BY speed;
 
+# 23
+SELECT maker, AVG(screen)
+FROM computer.Product JOIN computer.Laptop ON product.model = laptop.model
+GROUP BY maker;
 
+# 24
+SELECT DISTINCT maker
+FROM PC, Product
+WHERE pc.model = product.model
+GROUP BY product.maker
+HAVING COUNT( pc.model ) >= 3;
+
+# 25
+SELECT maker, MAX(price)
+FROM computer.Product JOIN computer.PC ON product.model = pc.model
+GROUP BY maker;
+
+# 26
+SELECT AVG(price)
+FROM computer.PC
+WHERE pc.speed > 2.0;
+
+# 27
+SELECT maker, AVG(hdisk)
+FROM computer.PC, computer.Product
+WHERE PC.model = Product.model AND Product.maker IN (
+	SELECT DISTINCT maker
+	FROM computer.Product
+	WHERE product.type = 'printer' )
+GROUP BY product.maker;
+
+# START USING BATTLESHIP DB
+
+use battleship;
+
+# 28
 
 
 
