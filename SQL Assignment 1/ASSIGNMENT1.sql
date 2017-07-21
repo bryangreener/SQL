@@ -177,7 +177,7 @@ GROUP BY maker;
 
 # 24
 SELECT DISTINCT maker
-FROM PC, Product
+FROM computer.PC, computer.Product
 WHERE pc.model = product.model
 GROUP BY product.maker
 HAVING COUNT( pc.model ) >= 3;
@@ -206,6 +206,162 @@ GROUP BY product.maker;
 use battleship;
 
 # 28
+SELECT DISTINCT class, country
+FROM battleship.classes
+WHERE classes.guns >= 10;
+
+# 29
+SELECT DISTINCT name AS shipName
+FROM battleship.ships
+WHERE launched < 1918;
+
+# 30
+SELECT ship, battle
+FROM battleship.outcomes
+WHERE result = 'sunk';
+
+# 31
+SELECT name
+FROM battleship.ships
+WHERE ships.name = ships.class;
+
+# 32
+SELECT name
+FROM battleship.ships
+WHERE ships.name LIKE 'R%' OR ships.name LIKE 'r%';
+
+# 33
+SELECT ship
+FROM battleship.outcomes
+WHERE outcomes.ship LIKE '% % %';
+
+# 34
+SELECT name
+FROM battleship.classes JOIN battleship.ships ON classes.class = ships.class
+WHERE displacement >= 35000;
+
+# 35
+SELECT ships.name, displacement, guns
+FROM battleship.classes, battleship.ships, battleship.outcomes
+WHERE outcomes.battle = 'Guadalcanal' 
+AND ships.name = outcomes.ship 
+AND classes.class = ships.class;
+
+# 36
+SELECT DISTINCT b1.country
+FROM battleship.classes b1, (
+	SELECT type, country
+	FROM battleship.classes
+    WHERE type = 'bc' ) AS b2
+WHERE b1.country = b2.country AND b1.type <> b2.type;
+
+# 37
+SELECT DISTINCT b1.ship
+FROM battleship.outcomes b1, (
+	SELECT ship, battle
+    FROM battleship.outcomes ) AS b2
+WHERE b1.ship = b2.ship AND b1.battle <> b2.battle AND b1.result = 'damaged';
+
+# 38
+SELECT battle
+FROM battleship.classes, battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND classes.class = ships.class
+HAVING COUNT( outcomes.battle ) >= 3;
+
+# 39
+SELECT DISTINCT country
+FROM battleship.classes t1, (
+	SELECT MAX(guns) AS guns
+    FROM battleship.classes ) t2
+WHERE t2.guns = t1.guns;
+    
+# 40
+SELECT classes.class
+FROM battleship.classes, battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND classes.class = ships.class
+AND EXISTS( SELECT ship FROM battleship.outcomes WHERE result = 'sunk' );
+
+# 41
+SELECT ships.name
+FROM battleship.classes, battleship.ships
+WHERE classes.class = ships.class
+AND classes.bore = 16;
+
+# 42
+SELECT outcomes.battle
+FROM battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND ships.class = 'Kongo';
+
+# 43
+SELECT DISTINCT s1.name
+FROM battleship.classes c1, battleship.ships s1
+WHERE c1.class = s1.class
+AND c1.guns >= ALL(
+	SELECT guns
+    FROM battleship.classes c2, battleship.ships s2
+    WHERE c2.class = s2.class AND c1.bore = c2.bore );
+ 
+# 44
+SELECT COUNT(classes.type)
+FROM battleship.classes
+WHERE classes.type = 'bb';
+
+# 45
+SELECT AVG(guns)
+FROM battleship.classes
+WHERE classes.type = 'bb';
+
+# 46
+SELECT AVG(guns)
+FROM battleship.classes, battleship.ships
+WHERE ships.class = classes.class AND type = 'bb';
+
+# 47
+SELECT DISTINCT t1.class, t1.launched
+FROM battleship.ships t1
+WHERE t1.launched <= ALL(
+	SELECT launched
+    FROM battleship.ships t2
+    WHERE t2.class = t1.class );
+
+# 48
+SELECT DISTINCT class, COUNT(outcomes.result)
+FROM battleship.ships, battleship.outcomes
+WHERE ships.name = outcomes.ship
+AND outcomes.result = 'sunk';
+
+# 49
+SELECT DISTINCT class, COUNT(outcomes.result)
+FROM battleship.ships, battleship.outcomes
+WHERE ships.name = outcomes.ship
+AND ( SELECT COUNT(ships.class) FROM battleship.ships ) >= 3
+AND outcomes.result = 'sunk';
+
+# 50
+SELECT country, AVG(( bore * bore * bore )/ 2 ) AS AvgShellWeight
+FROM battleship.classes
+GROUP BY classes.country;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
