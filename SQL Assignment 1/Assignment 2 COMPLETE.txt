@@ -1,6 +1,9 @@
 Database changed
 
 1. Find the model number, speed, and hard-disk size for all PC ’s whose price is under $1000.
+SELECT DISTINCT model, speed, hdisk
+FROM computer.PC
+WHERE PC.price < '1000.00';
 +-------+-------+-------+
 | model | speed | hdisk |
 +-------+-------+-------+
@@ -19,6 +22,9 @@ Database changed
 
 
 2. List the manufacturers of all printers.
+SELECT DISTINCT maker
+FROM Product
+WHERE Product.type = 'Printer';
 +-------+
 | maker |
 +-------+
@@ -29,6 +35,9 @@ Database changed
 
 
 3. Find the model number, memory size, and screen size for laptops costing more than $1500.
+SELECT DISTINCT model, ram, screen
+FROM Laptop
+WHERE price > '1500.00';
 +-------+------+--------+
 | model | ram  | screen |
 +-------+------+--------+
@@ -40,6 +49,9 @@ Database changed
 
 
 4. List all color printers.
+SELECT DISTINCT *
+FROM Printer
+WHERE color=true;
 +-------+-------+---------+--------+
 | model | color | type    | price  |
 +-------+-------+---------+--------+
@@ -52,6 +64,9 @@ Database changed
 
 
 5. Find the model number and hard-disk size for those PC ’s that have a speed of 3.2 and a price less than $2000.
+SELECT DISTINCT model, hdisk
+FROM PC
+WHERE speed = 3.20 AND price < 2000.00;
 +-------+-------+
 | model | hdisk |
 +-------+-------+
@@ -61,6 +76,9 @@ Database changed
 
 
 6. Give the manufacturer and speed of laptops with a hard disk of at least 30.
+SELECT DISTINCT maker, speed
+FROM Product NATURAL JOIN Laptop
+WHERE hdisk >= 30;
 +-------+-------+
 | maker | speed |
 +-------+-------+
@@ -76,6 +94,17 @@ Database changed
 
 
 7. Find the model number and price of all products (of any type) made by manufacturer B.
+SELECT DISTINCT PC.model, PC.price
+FROM computer.Product P, computer.PC
+WHERE P.maker='B' AND P.model=PC.model
+UNION
+SELECT DISTINCT L.model, L.price
+FROM computer.Product P, computer.Laptop L
+WHERE P.maker='B' AND P.model=L.model
+UNION
+SELECT DISTINCT PRI.model, PRI.price
+FROM computer.Product P, computer.Printer PRI
+WHERE P.maker='B' AND P.model=PRI.model;
 +-------+---------+
 | model | price   |
 +-------+---------+
@@ -87,6 +116,11 @@ Database changed
 
 
 8. Find those manufacturers that sell Laptops, but not PC ’s.
+SELECT DISTINCT P.maker
+FROM computer.Product P NATURAL JOIN computer.Laptop
+WHERE P.maker NOT IN (
+SELECT DISTINCT maker
+FROM computer.Product P NATURAL JOIN computer.PC);
 +-------+
 | maker |
 +-------+
@@ -96,6 +130,9 @@ Database changed
 
 
 9. Find those hard-disk sizes that occur in two or more PC ’s.
+SELECT DISTINCT PC.hdisk
+FROM PC JOIN PC p1
+WHERE PC.hdisk=p1.hdisk AND PC.model <> p1.model;
 +-------+
 | hdisk |
 +-------+
@@ -107,6 +144,9 @@ Database changed
 
 10. Find those pairs of PC models that have both the same speed and RAM. A pair should be listed
 only once; e.g., list (i , j ) but not (j,i).
+SELECT DISTINCT p1.model, p2.model
+FROM PC p1 JOIN PC p2
+WHERE p1.speed=p2.speed AND p1.ram=p2.ram AND p1.model < p2.model;
 +-------+-------+
 | model | model |
 +-------+-------+
@@ -116,6 +156,29 @@ only once; e.g., list (i , j ) but not (j,i).
 
 11. Find those manufacturers of at least two different computers (PC’s or laptops) with speeds of at
 least 3.0.
+SELECT DISTINCT s1.maker
+FROM
+	((
+	SELECT model
+	FROM PC P
+	WHERE speed >= 3.00
+	UNION
+	SELECT model
+	FROM Laptop L
+	WHERE speed >= 3.00
+	) T
+	NATURAL JOIN product s1,
+    (
+    SELECT model
+    FROM PC P2
+    WHERE speed >= 3.00
+    UNION
+    SELECT model
+    from Laptop L2
+    WHERE speed >= 3.00
+    ) T2
+    NATURAL JOIN product s2 )
+WHERE s1.maker = s2.maker AND s1.model <> s2.model;
 +-------+
 | maker |
 +-------+
@@ -124,6 +187,9 @@ least 3.0.
 
 
 12. Find the makers of PC ’s with a speed of at least 3.0.
+SELECT DISTINCT maker
+FROM PC NATURAL JOIN Product
+WHERE PC.speed >= 3.00;
 +-------+
 | maker |
 +-------+
@@ -133,6 +199,9 @@ least 3.0.
 
 
 13. Find the printers with the highest price.
+SELECT model
+FROM computer.printer
+WHERE price >= ALL( SELECT price FROM computer.printer );
 +-------+
 | model |
 +-------+
@@ -141,10 +210,34 @@ least 3.0.
 
 
 14. Find the laptops whose speed is slower than that of any PC.
+SELECT model
+FROM computer.Laptop
+WHERE laptop.speed < ALL ( SELECT speed FROM computer.PC );
+
 Empty set
 
 
 15. Find the model number of the item (PC, laptop, or printer) with the highest price.
+SELECT model
+FROM ((
+	SELECT model, price
+    FROM computer.PC )
+    UNION (
+    SELECT model, price
+    FROM computer.Laptop )
+    UNION (
+	SELECT model, price
+    FROM computer.Printer )) AS t1
+WHERE price >= ALL ( SELECT price FROM (
+		((
+		SELECT model, price
+		FROM computer.PC )
+		UNION (
+		SELECT model, price
+		FROM computer.Laptop )
+		UNION (
+		SELECT model, price
+		FROM computer.Printer ))) AS t2);
 +-------+
 | model |
 +-------+
@@ -153,6 +246,9 @@ Empty set
 
 
 16. Find the maker of the least expensive color printer.
+SELECT maker
+FROM computer.product JOIN computer.printer ON product.model = printer.model
+WHERE printer.price = ( SELECT MIN(price) FROM printer WHERE color=TRUE ) AND printer.color=TRUE;
 +-------+
 | maker |
 +-------+
@@ -162,6 +258,11 @@ Empty set
 
 17. Find the maker(s) of the PC(s) with the fastest processor among all those PC’s that have the
 smallest amount of RAM.
+SELECT DISTINCT maker
+FROM computer.PC JOIN computer.Product ON PC.model = Product.model
+WHERE PC.speed =
+	( SELECT MAX(speed) FROM computer.PC WHERE PC.ram =
+    ( SELECT MIN(ram) FROM computer.PC ));
 +-------+
 | maker |
 +-------+
@@ -170,6 +271,8 @@ smallest amount of RAM.
 
 
 18. Find the average speed of PC ’s.
+SELECT AVG(speed)
+FROM computer.PC;
 +------------+
 | AVG(speed) |
 +------------+
@@ -178,6 +281,9 @@ smallest amount of RAM.
 
 
 19. Find the average speed of laptops costing over $1000.
+SELECT AVG(speed)
+FROM computer.Laptop
+WHERE price > 1000.00;
 +------------+
 | AVG(speed) |
 +------------+
@@ -186,6 +292,9 @@ smallest amount of RAM.
 
 
 20. Find the average price of PC’s made by manufacturer “A.”
+SELECT AVG(price)
+FROM computer.product, computer.pc
+WHERE product.model = pc.model AND maker = 'A';
 +-------------+
 | AVG(price)  |
 +-------------+
@@ -194,6 +303,15 @@ smallest amount of RAM.
 
 
 21. Find the average price of PC’s and laptops made by manufacturer “D.”
+SELECT AVG(price)
+FROM ((
+	SELECT price
+	FROM computer.product, computer.pc
+    WHERE product.model = pc.model AND maker = 'D' )
+    UNION (
+    SELECT price
+    FROM computer.product, computer.laptop
+    WHERE product.model = laptop.model AND maker = 'D' )) AS t1;
 +------------+
 | AVG(price) |
 +------------+
@@ -202,6 +320,9 @@ smallest amount of RAM.
 
 
 22. Find, for each different speed, the average price of a PC.
+SELECT speed, AVG(price)
+FROM computer.PC
+GROUP BY speed;
 +-------+-------------+
 | speed | AVG(price)  |
 +-------+-------------+
@@ -218,6 +339,9 @@ smallest amount of RAM.
 
 
 23. Find for each manufacturer, the average screen size of its laptops.
+SELECT maker, AVG(screen)
+FROM computer.Product JOIN computer.Laptop ON product.model = laptop.model
+GROUP BY maker;
 +-------+-------------+
 | maker | AVG(screen) |
 +-------+-------------+
@@ -230,6 +354,11 @@ smallest amount of RAM.
 
 
 24. Find the manufacturers that make at least three different models of PC.
+SELECT DISTINCT maker
+FROM computer.PC, computer.Product
+WHERE pc.model = product.model
+GROUP BY product.maker
+HAVING COUNT( pc.model ) >= 3;
 +-------+
 | maker |
 +-------+
@@ -241,6 +370,9 @@ smallest amount of RAM.
 
 
 25. Find for each manufacturer who sells PC’s the maximum price of a PC.
+SELECT maker, MAX(price)
+FROM computer.Product JOIN computer.PC ON product.model = pc.model
+GROUP BY maker;
 +-------+------------+
 | maker | MAX(price) |
 +-------+------------+
@@ -253,6 +385,9 @@ smallest amount of RAM.
 
 
 26. Find, for each speed of PC above 2.0, the average price.
+SELECT AVG(price)
+FROM computer.PC
+WHERE pc.speed > 2.0;
 +------------+
 | AVG(price) |
 +------------+
@@ -261,6 +396,13 @@ smallest amount of RAM.
 
 
 27. Find the average hard disk size of a PC for all those manufacturers that make printers.
+SELECT maker, AVG(hdisk)
+FROM computer.PC, computer.Product
+WHERE PC.model = Product.model AND Product.maker IN (
+	SELECT DISTINCT maker
+	FROM computer.Product
+	WHERE product.type = 'printer' )
+GROUP BY product.maker;
 +-------+------------+
 | maker | AVG(hdisk) |
 +-------+------------+
@@ -272,6 +414,9 @@ smallest amount of RAM.
 Database changed
 
 28. Find the class name and country for all classes with at least 10 guns.
+SELECT DISTINCT class, country
+FROM battleship.classes
+WHERE classes.guns >= 10;
 +-----------+---------+
 | class     | country |
 +-----------+---------+
@@ -280,6 +425,9 @@ Database changed
 
 
 29. Find the names of all ships launched prior to 1918, but call the resulting column shipName.
+SELECT DISTINCT name AS shipName
+FROM battleship.ships
+WHERE launched < 1918;
 +-----------------+
 | shipName        |
 +-----------------+
@@ -298,6 +446,9 @@ Database changed
 
 
 30. Find the names of ships sunk in battle and the name of the battle in which they were sunk.
+SELECT ship, battle
+FROM battleship.outcomes
+WHERE result = 'sunk';
 +-------------+----------------+
 | ship        | battle         |
 +-------------+----------------+
@@ -312,6 +463,9 @@ Database changed
 
 
 31. Find all ships that have the same name as their class.
+SELECT name
+FROM battleship.ships
+WHERE ships.name = ships.class;
 +----------------+
 | name           |
 +----------------+
@@ -326,6 +480,9 @@ Database changed
 
 
 32. Find the names of all ships that begin with the letter “R.”
+SELECT name
+FROM battleship.ships
+WHERE ships.name LIKE 'R%' OR ships.name LIKE 'r%';
 +-----------------+
 | name            |
 +-----------------+
@@ -341,6 +498,9 @@ Database changed
 
 33. Find the names of all ships from the Outcomes table whose name consists of three or more
 words (e.g., King George V).
+SELECT ship
+FROM battleship.outcomes
+WHERE outcomes.ship LIKE '% % %';
 +-----------------+
 | ship            |
 +-----------------+
@@ -351,6 +511,9 @@ words (e.g., King George V).
 
 
 34. Find the ships heavier than 35,000 tons.
+SELECT name
+FROM battleship.classes JOIN battleship.ships ON classes.class = ships.class
+WHERE displacement >= 35000;
 +----------------+
 | name           |
 +----------------+
@@ -367,6 +530,11 @@ words (e.g., King George V).
 
 35. List the name, displacement, and number of guns of the ships engaged in the battle of
 Guadalcanal.
+SELECT ships.name, displacement, guns
+FROM battleship.classes, battleship.ships, battleship.outcomes
+WHERE outcomes.battle = 'Guadalcanal' 
+AND ships.name = outcomes.ship 
+AND classes.class = ships.class;
 +------------+--------------+------+
 | name       | displacement | guns |
 +------------+--------------+------+
@@ -376,6 +544,12 @@ Guadalcanal.
 
 
 36. Find those countries that have both battleships and battlecruisers.
+SELECT DISTINCT b1.country
+FROM battleship.classes b1, (
+	SELECT type, country
+	FROM battleship.classes
+    WHERE type = 'bc' ) AS b2
+WHERE b1.country = b2.country AND b1.type <> b2.type;
 +-------------+
 | country     |
 +-------------+
@@ -385,10 +559,21 @@ Guadalcanal.
 
 
 37. Find those ships that were damaged in one battle, but later fought in.
+SELECT DISTINCT b1.ship
+FROM battleship.outcomes b1, (
+	SELECT ship, battle
+    FROM battleship.outcomes ) AS b2
+WHERE b1.ship = b2.ship AND b1.battle <> b2.battle AND b1.result = 'damaged';
+
 Empty set
 
 
 38. Find those battles with at least three ships of the same country.
+SELECT battle
+FROM battleship.classes, battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND classes.class = ships.class
+HAVING COUNT( outcomes.battle ) >= 3;
 +----------------+
 | battle         |
 +----------------+
@@ -397,6 +582,11 @@ Empty set
 
 
 39. Find the countries whose ships had the largest number of guns.
+SELECT DISTINCT country
+FROM battleship.classes t1, (
+	SELECT MAX(guns) AS guns
+    FROM battleship.classes ) t2
+WHERE t2.guns = t1.guns;
 +---------+
 | country |
 +---------+
@@ -405,6 +595,11 @@ Empty set
 
 
 40. Find the classes of ships, at least one of which was sunk in a battle.
+SELECT classes.class
+FROM battleship.classes, battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND classes.class = ships.class
+AND EXISTS( SELECT ship FROM battleship.outcomes WHERE result = 'sunk' );
 +----------------+
 | class          |
 +----------------+
@@ -416,6 +611,10 @@ Empty set
 
 
 41. Find the names of the ships with a 16-inch bore.
+SELECT ships.name
+FROM battleship.classes, battleship.ships
+WHERE classes.class = ships.class
+AND classes.bore = 16;
 +----------------+
 | name           |
 +----------------+
@@ -429,6 +628,10 @@ Empty set
 
 
 42. Find the battles in which ships of the Kongo class participated.
+SELECT outcomes.battle
+FROM battleship.outcomes, battleship.ships
+WHERE ships.name = outcomes.ship
+AND ships.class = 'Kongo';
 +-------------+
 | battle      |
 +-------------+
@@ -438,6 +641,13 @@ Empty set
 
 43. Find the names of the ships whose number of guns was the largest for those ships of the same
 bore.
+SELECT DISTINCT s1.name
+FROM battleship.classes c1, battleship.ships s1
+WHERE c1.class = s1.class
+AND c1.guns >= ALL(
+	SELECT guns
+    FROM battleship.classes c2, battleship.ships s2
+    WHERE c2.class = s2.class AND c1.bore = c2.bore );
 +-----------------+
 | name            |
 +-----------------+
@@ -460,6 +670,9 @@ bore.
 
 
 44. Find the number of battleship (type=’bb’) classes.
+SELECT COUNT(classes.type)
+FROM battleship.classes
+WHERE classes.type = 'bb';
 +---------------------+
 | COUNT(classes.type) |
 +---------------------+
@@ -468,6 +681,9 @@ bore.
 
 
 45. Find the average number of guns of battleship (type=’bb’) classes.
+SELECT AVG(guns)
+FROM battleship.classes
+WHERE classes.type = 'bb';
 +-----------+
 | AVG(guns) |
 +-----------+
@@ -477,6 +693,9 @@ bore.
 
 46. Find the average number of guns of battleships (type=’bb’). Note the difference to the previous
 question. In this question, you need to weight a class by the number of ships of that class.
+SELECT AVG(guns)
+FROM battleship.classes, battleship.ships
+WHERE ships.class = classes.class AND type = 'bb';
 +-----------+
 | AVG(guns) |
 +-----------+
@@ -485,6 +704,12 @@ question. In this question, you need to weight a class by the number of ships of
 
 
 47. Find for each class the year in which the first ship of that class was launched.
+SELECT DISTINCT t1.class, t1.launched
+FROM battleship.ships t1
+WHERE t1.launched <= ALL(
+	SELECT launched
+    FROM battleship.ships t2
+    WHERE t2.class = t1.class );
 +----------------+----------+
 | class          | launched |
 +----------------+----------+
@@ -499,6 +724,10 @@ question. In this question, you need to weight a class by the number of ships of
 
 
 48. Find for each class the number of ships of that class sunk in battle.
+SELECT DISTINCT class, COUNT(outcomes.result)
+FROM battleship.ships, battleship.outcomes
+WHERE ships.name = outcomes.ship
+AND outcomes.result = 'sunk';
 +-------+------------------------+
 | class | COUNT(outcomes.result) |
 +-------+------------------------+
@@ -507,6 +736,11 @@ question. In this question, you need to weight a class by the number of ships of
 
 
 49. Find for each class with at least three ships the number of ships of that class sunk in battle.
+SELECT DISTINCT class, COUNT(outcomes.result)
+FROM battleship.ships, battleship.outcomes
+WHERE ships.name = outcomes.ship
+AND ( SELECT COUNT(ships.class) FROM battleship.ships ) >= 3
+AND outcomes.result = 'sunk';
 +-------+------------------------+
 | class | COUNT(outcomes.result) |
 +-------+------------------------+
@@ -516,6 +750,9 @@ question. In this question, you need to weight a class by the number of ships of
 
 50. The weight (in pounds) of the shell fired from a naval gun is approximately one half the cube of
 the bore (in inches). Find the average weight of the shell for each country’s ships.
+SELECT country, AVG(( bore * bore * bore )/ 2 ) AS AvgShellWeight
+FROM battleship.classes
+GROUP BY classes.country;
 +-------------+----------------+
 | country     | AvgShellWeight |
 +-------------+----------------+
