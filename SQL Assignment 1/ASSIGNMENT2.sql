@@ -9,7 +9,7 @@ use computer;
 # 1
 SELECT DISTINCT model, speed, hdisk
 FROM computer.PC
-WHERE PC.price < '1000.00';
+WHERE PC.price < 1000.00;
 
 # 2
 SELECT DISTINCT maker
@@ -19,7 +19,7 @@ WHERE Product.type = 'Printer';
 # 3
 SELECT DISTINCT model, ram, screen
 FROM Laptop
-WHERE price > '1500.00';
+WHERE price > 1500.00;
 
 # 4
 SELECT DISTINCT *
@@ -132,7 +132,15 @@ WHERE price >= ALL ( SELECT price FROM (
 SELECT maker
 FROM computer.product JOIN computer.printer ON product.model = printer.model
 WHERE printer.price = ( SELECT MIN(price) FROM printer WHERE color=TRUE ) AND printer.color=TRUE;
-    
+/* ALTERNATE ANSWER FOR 16
+SELECT maker
+FROM computer.product JOIN computer.printer ON product.model = printer.model
+WHERE printer.price <= ALL(
+	SELECT price
+    FROM printer
+    WHERE color = true);
+*/
+
 # 17
 SELECT DISTINCT maker
 FROM computer.PC JOIN computer.Product ON PC.model = Product.model
@@ -341,7 +349,7 @@ AND ( SELECT COUNT(ships.class) FROM battleship.ships ) >= 3
 AND outcomes.result = 'sunk';
 
 # 50
-SELECT country, AVG(( bore * bore * bore )/ 2 ) AS AvgShellWeight
+SELECT country, AVG((POW(bore, 3) )/ 2 ) AS AvgShellWeight
 FROM battleship.classes
 GROUP BY classes.country;
 
