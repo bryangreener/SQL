@@ -10,12 +10,12 @@ namespace ASSIGNMENT3
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            ConnectDB();
-            // Testing
-            Console.WriteLine(UI());
-            Console.ReadLine();
+            string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
+            MySqlConnection conn = new MySqlConnection();
+            conn.
         }
         private static Int16 UI()
         {
@@ -48,19 +48,16 @@ namespace ASSIGNMENT3
             return menuInput;
         }
 
-        public static void ConnectDB()
+        public static string QueryDB(String input)
         {
             string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
-                // SELECT statement test
-                //string sql = "SELECT model, price FROM PC WHERE price>=1000.00";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand(input, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
-
+                
                 while (rdr.Read())
                 {
                     Console.WriteLine(rdr[0] + " -- " + rdr[1]);
@@ -76,5 +73,54 @@ namespace ASSIGNMENT3
             Console.WriteLine("Done.");
         }
 
+        public static void AddCustomer()
+        {
+            Console.WriteLine(
+                "ADD CUSTOMER\n" +
+                "------------\n" +
+                "Company Name:");
+            String customerCompanyName = Console.ReadLine();
+            Console.WriteLine("Contact Name:");
+            String customerContactName = Console.ReadLine();
+            Console.WriteLine("Contact Title:");
+            String customerContactTitle = Console.ReadLine();
+            Console.WriteLine("Address:");
+            String customerAddress = Console.ReadLine();
+            Console.WriteLine("City:");
+            String customerCity = Console.ReadLine();
+            Console.WriteLine("Region:");
+            String customerRegion = Console.ReadLine();
+            Console.WriteLine("Postal Code:");
+            String customerPostalCode = Console.ReadLine();
+            Console.WriteLine("Country:");
+            String customerCountry = Console.ReadLine();
+            Console.WriteLine("Phone:");
+            String customerPhone = Console.ReadLine();
+            Console.WriteLine("Fax:");
+            String customerFax = Console.ReadLine();
+
+            String getID = "SELECT MAX(CustomerID) FROM Customers";
+            QueryDB
+        }
+        public static void AddOrder()
+        {
+
+        }
+        public static void Remove()
+        {
+
+        }
+        public static void Ship()
+        {
+
+        }
+        public static void Print()
+        {
+
+        }
+        public static void Restock()
+        {
+
+        }
     }
 }
