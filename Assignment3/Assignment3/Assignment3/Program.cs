@@ -64,20 +64,13 @@ namespace ASSIGNMENT3
             try
             {
                 conn.Open();
-                MySqlCommand lengthCmd = new MySqlCommand("SELECT COUNT(*) FROM Customers;");
-                Int32 lengthInt = Convert.ToInt32(lengthCmd.ExecuteScalar());
-                conn.Close();
-                conn.Open();
                 MySqlCommand cmd = new MySqlCommand(input, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
 
                 while (rdr.Read())
                 {
-                    for (int i = 0; i < lengthInt; i++ )
-                    {
-                        output.Add(rdr.GetString(i));
-                    }
+                    output.Add(rdr["CustomerID"].ToString());
                     //Console.WriteLine(rdr[0] + " -- " + rdr[1]);
                 }
                 rdr.Close();
