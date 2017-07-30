@@ -11,17 +11,24 @@ namespace REWORK
     {
         static void Main(string[] args)
         {
-            Int16 menuSelect = UI.mainUI();
-            switch (menuSelect)
+            bool exit = false;
+            do
             {
-                case 1: UI.AddCustomer(); break;
-                case 2: UI.AddOrder(); break;
-                case 3: UI.RemoveOrder(); break;
-                case 4: UI.ShipOrder(); break;
-                case 5: UI.Print(); break;
-                case 6: UI.Restock(); break;
-            }
-            Console.ReadLine();
+                Int16 menuSelect = UI.mainUI();
+                switch (menuSelect)
+                {
+                    case 1: UI.AddCustomer(); break;
+                    case 2: UI.AddOrder(); break;
+                    case 3: UI.RemoveOrder(); break;
+                    case 4: UI.ShipOrder(); break;
+                    case 5: UI.Print(); break;
+                    case 6: UI.Restock(); break;
+                    case 7: exit = true; break;
+                }
+            } while (exit == false);
+            Console.WriteLine("Press ENTER to exit program...");
+            Console.Read();
+            Environment.Exit(0);
         }
     }
     public class UI
@@ -56,7 +63,13 @@ namespace REWORK
             while (validateInput == false);
             return menuInput;
         }
-
+        /// <summary>
+        /// Prompt user for multiple fields of data.
+        /// Combine data into a single query.
+        /// INSERT into Customers relation.
+        /// 
+        /// Verifies correct inputs.
+        /// </summary>
         public static void AddCustomer()
         {
             string newID = "";
@@ -107,6 +120,9 @@ namespace REWORK
                    customerAddress,customerCity,customerRegion,customerPostalCode,customerCountry,customerPhone,customerFax);
             DB.NonQuery(addCustomer);
         }
+        /// <summary>
+        /// Same process as AddCustomer method.
+        /// </summary>
         public static void AddOrder()
         {
             string newID = "";
@@ -226,18 +242,54 @@ namespace REWORK
             DB.NonQuery(removeOrderQuery);
             DB.NonQuery(removeOrderDetailsQuery);
         }
+        /// <summary>
+        /// Ask for user input for OrderID. Verify ID exists in Orders relation.
+        /// After validation, update that ID with timestamp and echo the update.
+        /// </summary>
         public static void ShipOrder()
         {
-
+            Console.WriteLine("SHIP ORDERS\n" +
+                              "-----------\n" +
+                              "Enter OrderID to Ship:");
+            string orderID = Console.ReadLine();
+            string validateOrderIDQuery = String.Format("SELECT OrderID FROM Orders WHERE OrderID = '{0}'", orderID);
+            while(DB.Scalar(validateOrderIDQuery) == "")
+            {
+                Console.WriteLine("Please enter a valid Order ID.");
+            }
+            string shipOrders = "UPDATE Orders SET ShippedDate = Current_timestamp();";
+            DB.NonQuery(shipOrders);
+            string echo = String.Format("SELECT * FROM Orders WHERE OrderID='{0}'", orderID);
+            DB.QueryDB(echo);
+            Console.WriteLine("Item Shipped. See above for full order information.");
         }
+
+        /// <summary>
+        /// Selects all items from the Orders relation with value 'NULL' in ShippedDate column
+        /// and prints entire row.
+        /// </summary>
         public static void Print()
         {
             string printOrdersQuery = "SELECT * FROM Orders WHERE ShippedDate IS NULL ORDER BY OrderDate;";
             DB.QueryDB(printOrdersQuery);
         }
+
+        /// <summary>
+        /// Restock method finds all items in the Products relation that have less than 10 units remaining in the
+        /// UnitsInStock column and adds 10 to that remaining value.
+        /// </summary>
         public static void Restock()
         {
+            string restockQuery = "UPDATE Product SET UnitsInStock = UnitsInStock+10 WHERE UnitsInStock<10;";
+            DB.NonQuery(restockQuery);
+            Console.WriteLine("All products with < 10 remaining units have been restocked with 10 more units.");
+        }
+        public static void InputValidation(string input)
+        {
+            if(input == "")
+            {
 
+            }
         }
     }
     public class DB
@@ -269,11 +321,11 @@ namespace REWORK
                         }
                         else if (rdr.IsDBNull(i) && i != rdr.FieldCount -1)
                         {
-                            filterNull +="NULL -- ";
+                            filterNull += "NULL -- ";
                         }
                         else if (rdr.IsDBNull(i) && i == (rdr.FieldCount-1))
                         {
-                            filterNull +="NULL";
+                            filterNull += "NULL";
                         }
                     }
                     queryResult.Add(filterNull);
