@@ -7,7 +7,6 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-
 namespace REWORK
 {
 	class Program
@@ -20,7 +19,10 @@ namespace REWORK
 		#region Main
 		static void Main(string[] args)
 		{
-            // Used to control following do while loop in order to close program.
+			// Prompt user to enter database connection info
+			DBConnect();
+
+			// Used to control following do while loop in order to close program.
 			bool exit = false;
 			do
 			{
@@ -55,13 +57,16 @@ namespace REWORK
 		{
             // Clear console used to make view a bit cleaner. Used at beginning of all UI methods.
             Console.Clear();
-
-            // Variable used to break do while loop.
+			
+			// Variable used to break do while loop.
 			bool validateInput = false;
 			Int16 menuInput = 0;
+
 			do
 			{
 				Console.WriteLine(
+					"------------------------\n" +
+					" CONNECTED TO DATABASE\n" +
 					"------------------------\n" +
 					"Please select an option:\n" +
 					"1) Add Customer\n" +
@@ -515,16 +520,21 @@ namespace REWORK
 		#region DB
 		public static List<string> QueryDB(string input)
 		{
-			string user = ConfigurationManager.AppSettings["User"];
-			string password = ConfigurationManager.AppSettings["Password"];
 			List<string> queryResult = new List<string>();
 			// Connection info and establish connection to server.
-			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
+			// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
+			string user = ConfigurationManager.AppSettings["User"];
+			string password = ConfigurationManager.AppSettings["Password"];
+			string server = ConfigurationManager.AppSettings["Server"];
+			string db = ConfigurationManager.AppSettings["DB"];
+			string port = ConfigurationManager.AppSettings["Port"];
+			string connStr = $"server={server};user={user};database={db};port={port};password={password};";
 			MySqlConnection conn = new MySqlConnection(connStr);
 			try
 			{
 				// Open connection
 				conn.Open();
+				Console.WriteLine("CONNECTED");
 				// Set commands and begin reading query results.
 				MySqlCommand cmd = new MySqlCommand(input, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
@@ -560,6 +570,7 @@ namespace REWORK
 				rdr.Close();
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+			conn.Close();
             // For each item in queryresult list, print out.
 			for (int i = 0; i < queryResult.Count; i++)
 			{
@@ -575,10 +586,14 @@ namespace REWORK
 		/// <param name="input"></param>
 		public static void NonQuery(string input)
 		{
-            // Connection settings
+			// Connection info and establish connection to server.
+			// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
-			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
+			string server = ConfigurationManager.AppSettings["Server"];
+			string db = ConfigurationManager.AppSettings["DB"];
+			string port = ConfigurationManager.AppSettings["Port"];
+			string connStr = $"server={server};user={user};database={db};port={port};password={password};";
 			MySqlConnection conn = new MySqlConnection(connStr);
 			try
 			{
@@ -598,10 +613,14 @@ namespace REWORK
 		/// <returns></returns>
 		public static string Scalar(string input)
 		{
-            // Connection settings
+			// Connection info and establish connection to server.
+			// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
-			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
+			string server = ConfigurationManager.AppSettings["Server"];
+			string db = ConfigurationManager.AppSettings["DB"];
+			string port = ConfigurationManager.AppSettings["Port"];
+			string connStr = $"server={server};user={user};database={db};port={port};password={password};";
 			object result = null;
 			string output = "";
 			MySqlConnection conn = new MySqlConnection(connStr);
@@ -628,11 +647,15 @@ namespace REWORK
 		/// <returns></returns>
 		public static string GetID(string input)
 		{
-            // Connection settings
 			object result = null;
+			// Connection info and establish connection to server.
+			// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
-			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
+			string server = ConfigurationManager.AppSettings["Server"];
+			string db = ConfigurationManager.AppSettings["DB"];
+			string port = ConfigurationManager.AppSettings["Port"];
+			string connStr = $"server={server};user={user};database={db};port={port};password={password};";
 			MySqlConnection conn = new MySqlConnection(connStr);
 			try
 			{
@@ -646,6 +669,102 @@ namespace REWORK
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 			conn.Close();
             return result.ToString();
+		}
+		public static void DBConnect()
+		{
+			bool correctPort = false;
+			bool connection = false;
+			string testPort = "";
+			do
+			{
+				// Prompt for DB credentials and update app.config.
+				System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+				Console.WriteLine("DB Server:");
+				config.AppSettings.Settings["Server"].Value = Console.ReadLine();
+				Console.WriteLine("DB Port:");
+				// Verify port input is a number. Otherwise the program crashes.
+				do
+				{
+					try
+					{
+						testPort = Console.ReadLine();
+						Convert.ToInt64(testPort);
+						correctPort = true;
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine("Port must be numbers only.");
+						Console.WriteLine("DB Port:");
+					}
+					
+				} while (correctPort == false);
+				// gather remaining info
+				config.AppSettings.Settings["Port"].Value = testPort;
+				Console.WriteLine("DB Name:");
+				config.AppSettings.Settings["DB"].Value = Console.ReadLine();
+				Console.WriteLine("DB User:");
+				config.AppSettings.Settings["User"].Value = Console.ReadLine();
+				Console.WriteLine("DB Password:");
+
+				// Password masking below not used due to output adding special characters to appSettings file.
+				/*ConsoleKeyInfo key;
+				// Mask password entry
+				string pass = "";
+				do
+				{
+					key = Console.ReadKey(true);
+
+					// Backspace Should Not Work
+					if (key.Key != ConsoleKey.Backspace)
+					{
+						pass += key.KeyChar;
+						Console.Write("*");
+					}
+					else
+					{
+						Console.Write("\b");
+					}
+				}
+				// Stops Receving Keys Once Enter is Pressed
+				while (key.Key != ConsoleKey.Enter);
+				Console.WriteLine();*/
+				//config.AppSettings.Settings["Password"].Value = pass;
+
+				config.AppSettings.Settings["Password"].Value = Console.ReadLine();
+				config.Save(ConfigurationSaveMode.Modified);
+				ConfigurationManager.RefreshSection("appSettings");
+
+				// Connection info and establish connection to server.
+				// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
+				// Set variables for connStr string
+				string user = ConfigurationManager.AppSettings["User"];
+				string password = ConfigurationManager.AppSettings["Password"];
+				string server = ConfigurationManager.AppSettings["Server"];
+				string db = ConfigurationManager.AppSettings["DB"];
+				string port = ConfigurationManager.AppSettings["Port"];
+
+				string connStr = $"server={server};user={user};database={db};port={port};password={password};";
+				MySqlConnection conn = new MySqlConnection(connStr);
+				// Test connection. Restart connection prompts if connection fails.
+				try
+				{
+					conn.Open();
+					connection = true;
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex.ToString());
+					Console.WriteLine("---------------------------------------");
+					Console.WriteLine("       SERVER CONNECTION FAILED");
+					Console.WriteLine("Invalid connection information entered.");
+					Console.WriteLine("       SEE ABOVE FOR ERROR INFO");
+					Console.WriteLine("---------------------------------------");
+				}
+				conn.Close();
+			} while (connection == false);
+			
+			// Return to main.
+			return;
 		}
 		#endregion
 	}
