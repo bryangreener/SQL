@@ -1,4 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿/* DBMS Assignment 3
+ * Due: 2017-07-31
+ * By: Bryan Greener
+ */
+
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,10 +20,13 @@ namespace REWORK
 		#region Main
 		static void Main(string[] args)
 		{
+            // Used to control following do while loop in order to close program.
 			bool exit = false;
 			do
 			{
+                // Call mainUI which returns value 1-7 for following switch statement.
 				Int16 menuSelect = mainUI();
+                // Switch statement calls methods from UI region.
 				switch (menuSelect)
 				{
 					case 1: AddCustomer(); break;
@@ -30,6 +38,8 @@ namespace REWORK
 					case 7: exit = true; break;
 				}
 			} while (exit == false);
+
+            // Close console.
 			Console.WriteLine("Press ENTER to exit program...");
 			Console.Read();
 			Environment.Exit(0);
@@ -43,6 +53,10 @@ namespace REWORK
 		#region UI
 		public static Int16 mainUI()
 		{
+            // Clear console used to make view a bit cleaner. Used at beginning of all UI methods.
+            Console.Clear();
+
+            // Variable used to break do while loop.
 			bool validateInput = false;
 			Int16 menuInput = 0;
 			do
@@ -57,10 +71,12 @@ namespace REWORK
 					"5) Print Pending\n" +
 					"6) Restock Parts\n" +
 					"7) Exit");
+                // Test if input is an integer, otherwise ask for corrected user input.
 				try { menuInput = Convert.ToInt16(Console.ReadLine()); }
 				catch (FormatException e) { Console.WriteLine("Please enter a number 1-7"); }
 				finally
 				{
+                    // Verify input is one of given values.
 					if (menuInput < 1 || menuInput > 7)
 					{
 						Console.WriteLine("Please enter a number 1-7");
@@ -69,6 +85,8 @@ namespace REWORK
 				}
 			}
 			while (validateInput == false);
+
+            // Return value back to main class to call appropriate followup methods.
 			return menuInput;
 		}
 
@@ -81,92 +99,137 @@ namespace REWORK
 		/// </summary>
 		public static void AddCustomer()
 		{
+            Console.Clear();
+
+            // Ask for user input to fill out fields. Each input is checked to make sure it is not empty.
 			Console.WriteLine(
 				"ADD CUSTOMER\n" +
 				"------------\n");
-			Console.WriteLine("Customer ID:");
-			String customerID = Console.ReadLine();
-			customerID = ValidateID(customerID);             // Call method that formats input and verifies it is correct.
-			Console.WriteLine("Company Name:");
-			String customerCompanyName = Console.ReadLine();
-			Console.WriteLine("Contact Name:");
-			String customerContactName = Console.ReadLine();
-			Console.WriteLine("Contact Title:");
-			String customerContactTitle = Console.ReadLine();
-			Console.WriteLine("Address:");
-			String customerAddress = Console.ReadLine();
-			Console.WriteLine("City:");
-			String customerCity = Console.ReadLine();
-			Console.WriteLine("Region:");
-			String customerRegion = Console.ReadLine();
-			Console.WriteLine("Postal Code:");
-			String customerPostalCode = Console.ReadLine();
-			Console.WriteLine("Country:");
-			String customerCountry = Console.ReadLine();
-			Console.WriteLine("Phone:");
-			String customerPhone = Console.ReadLine();
-			Console.WriteLine("Fax:");
-			String customerFax = Console.ReadLine();
 
-			String addCustomer = $"INSERT INTO Customers (CustomerID,CompanyName,ContactName,ContactTitle,Address,City,Region,postalCode,Country,Phone,Fax) " +
-				$"VALUES('{customerID}','{customerCompanyName}','{customerContactName}','{customerContactTitle}','{customerAddress}','{customerCity}','{customerRegion}','{customerPostalCode}','{customerCountry}','{customerPhone}','{customerFax}')";
+			Console.WriteLine("Customer ID:");
+			String id = Console.ReadLine();
+            // Call method that formats input and verifies it is correct.
+            id = ValidateID(id);             
+			Console.WriteLine("Company Name:");
+			String companyName = Console.ReadLine();
+            companyName = ValidateInput(companyName);
+			Console.WriteLine("Contact Name:");
+			String contactName = Console.ReadLine();
+            contactName = ValidateInput(contactName);
+            Console.WriteLine("Contact Title:");
+			String title = Console.ReadLine();
+            title = ValidateInput(title);
+            Console.WriteLine("Address:");
+			String addr = Console.ReadLine();
+            addr = ValidateInput(addr);
+            Console.WriteLine("City:");
+			String city = Console.ReadLine();
+            city = ValidateInput(city);
+            Console.WriteLine("Region:");
+			String region = Console.ReadLine();
+            region = ValidateInput(region);
+            Console.WriteLine("Postal Code:");
+			String postal = Console.ReadLine();
+            postal = ValidateInput(postal);
+            Console.WriteLine("Country:");
+			String country = Console.ReadLine();
+            country = ValidateInput(country);
+            Console.WriteLine("Phone:");
+			String phone = Console.ReadLine();
+            phone = ValidateInput(phone);
+            Console.WriteLine("Fax:");
+			String fax = Console.ReadLine();
+            fax = ValidateInput(fax);
+
+            // Create query string. Send to NonQuery method.
+            String addCustomer = $"START TRANSACTION; INSERT INTO Customers (CustomerID,CompanyName,ContactName,ContactTitle,Address,City,Region,postalCode,Country,Phone,Fax) " +
+				$"VALUES('{id}','{companyName}','{contactName}','{title}','{addr}','{city}','{region}','{postal}','{country}','{phone}','{fax}'); COMMIT;";
 			NonQuery(addCustomer);
-		}
+
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+
+            // Return line used to send user back to main menu. Used in every UI method.
+            return;
+        }
 
 		/// <summary>
 		/// Same process as AddCustomer method.
 		/// </summary>
 		public static void AddOrder()
 		{
+            Console.Clear();
+
 			Console.WriteLine(
 				"ADD ORDER\n" +
 				"---------\n");
 			// Generate ID for Orders OrderID field.
 			String orderIDGen = "SELECT MAX(OrderID) FROM Orders WHERE OrderID REGEXP '^[0-9]+$';";
 			string orderID = GenerateID(orderIDGen);
+
 			// Gather user input for remaining fields.
 			Console.WriteLine("Customer ID:");
-			string orderCustomerID = Console.ReadLine();
-			Console.WriteLine("Employee ID:");
-			string orderEmployeeID = Console.ReadLine();
-			Console.WriteLine("Order Date:");
-			string orderDate = Console.ReadLine();
-			Console.WriteLine("Required Date:");
-			string orderRequiredDate = Console.ReadLine();
-			Console.WriteLine("Shipped Date:");
-			string orderShippedDate = Console.ReadLine();
-			Console.WriteLine("Shipped Via:");
-			string orderShippedVia = Console.ReadLine();
-			Console.WriteLine("Freight:");
-			string orderFreight = Console.ReadLine();
-			Console.WriteLine("Ship Name:");
-			string orderShipName = Console.ReadLine();
-			Console.WriteLine("Ship Address:");
-			string orderShipAddress = Console.ReadLine();
-			Console.WriteLine("Ship City:");
-			string orderShipCity = Console.ReadLine();
-			Console.WriteLine("Ship Region:");
-			string orderShipRegion = Console.ReadLine();
-			Console.WriteLine("Ship Postal Code:");
-			string orderShipPostalCode = Console.ReadLine();
-			Console.WriteLine("Ship Country:");
-			string orderShipCountry = Console.ReadLine();
+			string cid = Console.ReadLine();
+            cid = ValidateInput(cid);
+            Console.WriteLine("Employee ID:");
+			string eid = Console.ReadLine();
+            eid = ValidateInput(eid);
+            Console.WriteLine("Order Date:");
+			string oDate = Console.ReadLine();
+            oDate = ValidateInput(oDate);
+            Console.WriteLine("Required Date:");
+			string rDate = Console.ReadLine();
+            rDate = ValidateInput(rDate);
+            Console.WriteLine("Shipped Date:");
+			string sDate = Console.ReadLine();
+            sDate = ValidateInput(sDate);
+            Console.WriteLine("Shipped Via:");
+			string sVia = Console.ReadLine();
+            sVia = ValidateInput(sVia);
+            Console.WriteLine("Freight:");
+			string freight = Console.ReadLine();
+            freight = ValidateInput(freight);
+            Console.WriteLine("Ship Name:");
+			string sName = Console.ReadLine();
+            sName = ValidateInput(sName);
+            Console.WriteLine("Ship Address:");
+			string sAddr = Console.ReadLine();
+            sAddr = ValidateInput(sAddr);
+            Console.WriteLine("Ship City:");
+			string sCity = Console.ReadLine();
+            sCity = ValidateInput(sCity);
+            Console.WriteLine("Ship Region:");
+            string sRegion = Console.ReadLine();
+            sRegion = ValidateInput(sRegion);
+            Console.WriteLine("Ship Postal Code:");
+			string sPostal = Console.ReadLine();
+            sPostal = ValidateInput(sPostal);
+            Console.WriteLine("Ship Country:");
+			string sCountry = Console.ReadLine();
+            sCountry = ValidateInput(sCountry);
 
-			// Info for Order_details relation
-			Console.WriteLine(
+            // Info for Order_details relation
+            Console.WriteLine(
 				"ORDER DETAILS:\n" +
 				"ORDER ID: " + orderID +
 				"\n--------------");
-			// Generate ID for Order_details' ID field
+			
+            // Generate ID for Order_details' ID field
 			String orderDetailsIDGen = "SELECT MAX(ID) FROM Order_details WHERE ID REGEXP '^[0-9]+$';";
 			string orderDetailsID = GenerateID(orderDetailsIDGen);
-			// Gather info for other fields.
+			
+            // Gather info for other fields.
 			Console.WriteLine("Product ID:");
-			string orderDetailsProductID = Console.ReadLine();
-			Console.WriteLine("Quantity:");
-			string orderDetailsQuantity = Console.ReadLine();
-			// If item has a discount, the order gets rejected.
-			string discountQuery = $"SELECT Discount FROM Order_details WHERE OrderID={orderID}";
+			string detailID = Console.ReadLine();
+            detailID = ValidateInput(detailID);
+            Console.WriteLine("Quantity:");
+			string quantity = Console.ReadLine();
+            quantity = ValidateInput(quantity);
+
+            // If item has a discount, the order gets rejected.
+            string discountQuery = $"SELECT Discount FROM Order_details WHERE OrderID={orderID}";
 			string discountYN = Scalar(discountQuery);
 			if (discountYN == "y")
 			{
@@ -178,41 +241,64 @@ namespace REWORK
 				grabTimestamp = Scalar(grabTimestamp);
 
 				// Update number of units on order by adding 1
-				string updateUnitsOnOrderAdd = $"UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{orderDetailsProductID}'";
+				string updateUnitsOnOrderAdd = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{detailID}'; COMMIT;";
 				NonQuery(updateUnitsOnOrderAdd);
 
 				// Add new row to Orders
-				string orderQuery = "INSERT INTO Orders (OrderID,CustomerID,EmployeeID,RequiredDate,ShippedDate" +
+				string orderQuery = "START TRANSACTION; INSERT INTO Orders (OrderID,CustomerID,EmployeeID,RequiredDate,ShippedDate" +
 				",ShipVia,Freight,ShipName,ShipAddress,ShipCity,ShipRegion,ShipPostalCode,ShipCountry) VALUES" +
-				$"('{orderID}','{orderCustomerID}','{orderEmployeeID}','{orderRequiredDate}','{orderShippedDate}','{orderShippedVia}','{orderFreight}'," +
-				$"'{orderShipName}','{orderShipAddress}','{orderShipCity}','{orderShipRegion}','{orderShipPostalCode}','{orderShipCountry}')";
+				$"('{orderID}','{cid}','{eid}','{oDate}','{sDate}','{sVia}','{freight}','{sName}','{sAddr}','{sCity}','{sRegion}','{sPostal}','{sCountry}'); COMMIT;";
 				NonQuery(orderQuery);
 
 				// Add new row to Order_details
-				string productUnitPriceQuery = $"SELECT UnitPrice FROM Products WHERE ProductID = '{orderDetailsProductID}";
+				string productUnitPriceQuery = $"START TRANSACTION; SELECT UnitPrice FROM Products WHERE ProductID = '{detailID}";
 				string orderDetailsQuery = "INSERT INTO Order_details (ID,OrderID,ProductID,UnitPrice,Quantity,Discount) VALUES" +
-					$"('{orderDetailsID}','{orderID}','{orderDetailsProductID}','{productUnitPriceQuery}','{orderDetailsQuantity}','{discountYN}')";
+					$"('{orderDetailsID}','{orderID}','{detailID}','{productUnitPriceQuery}','{quantity}','{discountYN}'); COMMIT;";
 				NonQuery(orderDetailsQuery);
 			}
-		}
 
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+            return;
+        }
+
+        /// <summary>
+        /// Asks user for OrderID to delete.
+        /// </summary>
 		public static void RemoveOrder()
 		{
+            Console.Clear();
+
 			Console.WriteLine("REMOVE ORDER\n" +
 							  "------------\n" +
 							  "Enter Order ID to Delete:");
-			string removeOrderID = Console.ReadLine();
+			string rid = Console.ReadLine();
 
-			// Run queries to delete row from Orders, Order_details, and remove unit on order from Products
-			string removeOrderQuery = $"DELETE FROM Orders WHERE OrderID='{removeOrderID}'";
-			string removeOrderDetailsQuery = $"DELETE FROM Order_details WHERE OrderID='{removeOrderID}'";
-			string orderDetailsProductID = $"SELECT ProductID FROM Order_details WHERE OrderID='{removeOrderID}'";
-			orderDetailsProductID = Scalar(orderDetailsProductID);
-			string updateUnitsOnOrderRemove = $"UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{orderDetailsProductID}'";
-			NonQuery(updateUnitsOnOrderRemove);
-			NonQuery(removeOrderQuery);
-			NonQuery(removeOrderDetailsQuery);
-		}
+            // Check if item with OrderID = rid exists in DB.
+            string findOrder = $"SELECT OrderID FROM Orders WHERE OrderID='{rid}'";
+            // If it does exist...
+            if (Scalar(findOrder) != "NULL")
+            {
+                // Run queries to delete row from Orders, Order_details, and remove unit on order from Products
+                string removeOrderQuery = $"START TRANSACTION; DELETE FROM Orders WHERE OrderID='{rid}'; COMMIT;";
+                string removeOrderDetailsQuery = $"START TRANSACTION; DELETE FROM Order_details WHERE OrderID='{rid}'; COMMIT;";
+                string pid = $"SELECT ProductID FROM Order_details WHERE OrderID='{rid}'";
+                pid = Scalar(pid);
+                string updateUnitsOnOrderRemove = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{pid}'; COMMIT;";
+                NonQuery(updateUnitsOnOrderRemove);
+                NonQuery(removeOrderQuery);
+                NonQuery(removeOrderDetailsQuery);
+            } // Otherwise...
+            else { Console.WriteLine($"NO ORDER WITH ID '{rid}' FOUND."); }
+			
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+            return;
+        }
 
 		/// <summary>
 		/// Ask for user input for OrderID. Verify ID exists in Orders relation.
@@ -220,21 +306,48 @@ namespace REWORK
 		/// </summary>
 		public static void ShipOrder()
 		{
-			Console.WriteLine("SHIP ORDERS");
-			Console.WriteLine("-----------" + Environment.NewLine +
-							  "Enter OrderID to Ship:");
-			string orderID = Console.ReadLine();
-			string validateOrderIDQuery = $"SELECT OrderID FROM Orders WHERE OrderID = '{orderID}'";
-			while (Scalar(validateOrderIDQuery) == "")
-			{
-				Console.WriteLine("Please enter a valid Order ID.");
-			}
-			string shipOrders = "UPDATE Orders SET ShippedDate = Current_timestamp();";
-			NonQuery(shipOrders);
-			string echo = $"SELECT * FROM Orders WHERE OrderID='{orderID}'";
+            Console.Clear();
+
+            string id = "";
+            string validateOrderIDQuery = "";
+            string checkIfShipped = "";
+            Console.WriteLine("SHIP ORDERS");
+            Console.WriteLine("-----------");
+            // Loop used to ask for appropriate input and verify that all data is entered correctly.
+            do
+            {
+                Console.WriteLine("Enter Valid OrderID to Ship:");
+                id = Console.ReadLine();
+                validateOrderIDQuery = $"SELECT OrderID FROM Orders WHERE OrderID = '{id}'";
+                
+                // While entered ID exists in relation
+                while (Scalar(validateOrderIDQuery) == "NULL")
+                {
+                    Console.WriteLine("Please enter a valid Order ID:");
+                    id = Console.ReadLine();
+                    validateOrderIDQuery = $"SELECT OrderID FROM Orders WHERE OrderID = '{id}'";
+                }
+                // Check to see if the order has already been shipped.
+                checkIfShipped = $"SELECT ShippedDate FROM Orders WHERE OrderID = '{id}'";
+                checkIfShipped = Scalar(checkIfShipped);
+                // If already shipped, return error and continue loop until user enters valid ID
+                if (checkIfShipped != "NULL") { Console.WriteLine("UNABLE TO SHIP. Order has already been shipped."); }
+            } while (checkIfShipped != "NULL");
+
+            // After input has been verified to exist in relation, update Shipped Date field in relation with current timestamp.
+			string shipOrders = $"START TRANSACTION; UPDATE Orders SET ShippedDate = Current_timestamp() WHERE OrderID = '{id}'; COMMIT;";
+            NonQuery(shipOrders);
+            // Print order info for newly shipped order.
+			string echo = $"SELECT * FROM Orders WHERE OrderID='{id}'";
 			QueryDB(echo);
-			Console.WriteLine("Item Shipped. See above for full order information.");
-		}
+			Console.WriteLine("^^ Order Shipped. See above for full order information. ^^");
+
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+            return;
+        }
 
 		/// <summary>
 		/// Selects all items from the Orders relation with value 'NULL' in ShippedDate column
@@ -242,9 +355,24 @@ namespace REWORK
 		/// </summary>
 		public static void Print()
 		{
-			string printOrdersQuery = "SELECT * FROM Orders WHERE ShippedDate IS NULL ORDER BY OrderDate;";
+            Console.Clear();
+
+            // Header formatting. space string used to simplify formatting.
+            string space = "";
+            Console.WriteLine($"ID{space.PadRight(7, ' ')}CID{space.PadRight(6, ' ')}EID{space.PadRight(2, ' ')}Order Date{space.PadRight(14, ' ')}Required Date{space.PadRight(9, ' ')}" +
+                $"ShipDate{space.PadRight(2, ' ')}Via{space.PadRight(2, ' ')}Freight{space.PadRight(2, ' ')}Ship Name{space.PadRight(10, ' ')}Ship Address{space.PadRight(5, ' ')}Ship City{space.PadRight(5, ' ')}" +
+                $"Ship Region{space.PadRight(3, ' ')}Ship Postal{space.PadRight(2, ' ')}Ship Country");
+
+            // Query DB to return list of rows where ShippedDate is null.
+            string printOrdersQuery = "SELECT * FROM Orders WHERE ShippedDate IS NULL ORDER BY OrderDate;";
 			QueryDB(printOrdersQuery);
-		}
+
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+            return;
+        }
 
 		/// <summary>
 		/// Restock method finds all items in the Products relation that have less than 10 units remaining in the
@@ -252,10 +380,19 @@ namespace REWORK
 		/// </summary>
 		public static void Restock()
 		{
-			string restockQuery = "UPDATE Product SET UnitsInStock = UnitsInStock+10 WHERE UnitsInStock<10;";
+            Console.Clear();
+
+            // Update DB. See writeline for explanation.
+			string restockQuery = "START TRANSACTION; UPDATE Products SET UnitsInStock = UnitsInStock+50 WHERE UnitsInStock<10; COMMIT;";
 			NonQuery(restockQuery);
-			Console.WriteLine("All products with < 10 remaining units have been restocked with 10 more units.");
-		}
+			Console.WriteLine("All products with < 10 remaining units have been restocked with 50 more units.");
+
+            // Prompt for enter key to return to mainUI.
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("PRESS ENTER TO RETURN TO MAIN MENU");
+            Console.ReadLine();
+            return;
+        }
 		#endregion
 
 		/// <summary>
@@ -268,14 +405,16 @@ namespace REWORK
 		{
 			string newID = "";
 			int tempID;
+            // Test to make sure input is an integer and format the input using GetID method.
 			try
 			{
-				tempID = GetID(input);
+				tempID = Convert.ToInt32(GetID(input));
 				tempID++;
 				newID = tempID.ToString();
 				newID = newID.PadLeft(5, '0');
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+
 			return newID;
 		}
 
@@ -291,24 +430,46 @@ namespace REWORK
 			string newID = "";
 			int tempID;
 			bool duplicate = true;
+            string tempGen;
+            // Finds max auto generated ID with only numbers in its ID.
 			String genID = "SELECT MAX(CustomerID) FROM Customers WHERE CustomerID REGEXP '^[0-9]+$';";
 			String checkDup = "";
-			try
+
+            try
 			{
 				// Remove all spaces from input string.
 				input = input.Replace(" ", String.Empty).ToUpper();
 				// If string is longer than 5 char, trim down to 5.
 				if (input.Length >= 5) { input = input.Remove(5, input.Length - 5); }
-				// Generate new ID
-				tempID = GetID(genID);
-				while (duplicate == true)
+                // Generate new ID
+                tempGen = GetID(genID);
+                // When no auto gen IDs have been created yet, this prevents error with null return from query.
+                if (tempGen == "NULL") { tempID = 0; }
+                else { tempID = Convert.ToInt32(tempGen); }
+                // Checks if input value exists in relation already.
+                checkDup = $"SELECT CustomerID FROM Customers WHERE CustomerID='{input}';";
+                if(Scalar(checkDup) =="NULL")
+                {
+                    duplicate = false;
+                }
+                // While the value already exists in relation...
+                while (duplicate == true)
 				{
+                    // Format string to match other IDs
 					newID = tempID.ToString();
-					newID = (input + newID.PadLeft((5 - input.Length), '0')).Remove(0, 1);
-					checkDup = $"SELECT CustomerID FROM Customers WHERE CustomerID='{newID}';";
+                    newID = newID.PadLeft(5 - input.Length, '0');
+                    // Heavy formatting to concatenate input with auto generated ID
+                    if(input.Length + newID.Length > 5)
+                    {
+                        input = input.Remove(5 - newID.Length);
+                    }
+                    newID = input + newID;
+
+                    // Verify this new ID doesn't exist in relation. Much of above processes repeated here.
+                    checkDup = $"SELECT CustomerID FROM Customers WHERE CustomerID='{newID}';";
 					if (Scalar(checkDup) == "NULL")
 					{
-						if (input.Length >= 5)
+						if (input.Length > 5)
 						{
 							input = input.Remove(5, input.Length - 5);
 						}
@@ -318,16 +479,32 @@ namespace REWORK
 						}
 						duplicate = false;
 					}
-					else
+					else // Otherwise, increment tempID and continue loop until unique ID is created.
 					{
 						tempID++;
 					}
 				}
-				Console.WriteLine(input);
+				//Console.WriteLine(input); USED FOR TESTING.
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+
 			return input;
 		}
+
+        /// <summary>
+        /// Basic method used to check if input is null then prompts for user input until they correct the issue.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string ValidateInput(string input)
+        {
+            while(input == "")
+            {
+                Console.WriteLine("Please enter a valid input:");
+                input = Console.ReadLine();
+            }
+            return input;
+        }
 		#endregion
 
 		/// <summary>
@@ -354,8 +531,9 @@ namespace REWORK
 				while (rdr.Read())
 				{
 					//queryResult.Add(rdr.GetString(rdr.GetOrdinal())); THIS ALSO WORKS BUT ISNT NEEDED ANYMORE
-					// Below used to output in an easily read format using -- as a delimiter between values
-					// and NULL is filled in for null values in the tables.
+
+					// Below used to output in an easily read format using " -- " as a delimiter between values
+					// "NULL" is filled in for null values in relation.
 					string filterNull = "";
 					for (int i = 0; i < rdr.FieldCount; i++)
 					{
@@ -378,13 +556,11 @@ namespace REWORK
 					}
 					// Add to List.
 					queryResult.Add(filterNull);
-					// Alternate input methods below.
-					//queryResult.Add(rdr.GetString(rdr[0] + " -- " + rdr[1] + " -- " + rdr[2] + " -- " + rdr[3] + " -- " + rdr[4] + " -- " + rdr[5]));
-					//Console.WriteLine(rdr[0] + " -- " + rdr[1]);
 				}
 				rdr.Close();
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            // For each item in queryresult list, print out.
 			for (int i = 0; i < queryResult.Count; i++)
 			{
 				Console.WriteLine(queryResult[i]);
@@ -399,12 +575,14 @@ namespace REWORK
 		/// <param name="input"></param>
 		public static void NonQuery(string input)
 		{
+            // Connection settings
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
 			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
 			MySqlConnection conn = new MySqlConnection(connStr);
 			try
 			{
+                // executes NonQuery used to update/input
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand(input, conn);
 				cmd.ExecuteNonQuery();
@@ -420,6 +598,7 @@ namespace REWORK
 		/// <returns></returns>
 		public static string Scalar(string input)
 		{
+            // Connection settings
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
 			string connStr = $"server=localhost;user={user};database=northwind;port=3306;password={password};";
@@ -447,8 +626,9 @@ namespace REWORK
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		public static Int32 GetID(string input)
+		public static string GetID(string input)
 		{
+            // Connection settings
 			object result = null;
 			string user = ConfigurationManager.AppSettings["User"];
 			string password = ConfigurationManager.AppSettings["Password"];
@@ -459,12 +639,13 @@ namespace REWORK
 				conn.Open();
 				MySqlCommand cmd = new MySqlCommand(input, conn);
 				result = cmd.ExecuteScalar();
+                // Make sure the result is not null. If it is, set result string to avoid conversion issues with return.
 				if (result != null && DBNull.Value != result) { result = Convert.ToInt32(result); }
 				else if (result == null || DBNull.Value == result) { result = "NULL"; }
 			}
 			catch (Exception ex) { Console.WriteLine(ex.ToString()); }
 			conn.Close();
-			return Convert.ToInt32(result);
+            return result.ToString();
 		}
 		#endregion
 	}
