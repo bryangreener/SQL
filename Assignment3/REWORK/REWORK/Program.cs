@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using System.Text.RegularExpressions;
 namespace REWORK
 {
     class Program
@@ -63,6 +64,7 @@ namespace REWORK
             while (validateInput == false);
             return menuInput;
         }
+        
         /// <summary>
         /// Prompt user for multiple fields of data.
         /// Combine data into a single query.
@@ -72,28 +74,12 @@ namespace REWORK
         /// </summary>
         public static void AddCustomer()
         {
-            string newID = "";
             Console.WriteLine(
                 "ADD CUSTOMER\n" +
                 "------------\n");
             Console.WriteLine("Customer ID:");
             String customerID = Console.ReadLine();
-            try
-            {
-                // FIX ME. any input being replaced by auto genID
-                customerID = customerID.Replace(" ", String.Empty).ToUpper();
-                String genID = "SELECT MAX(CustomerID) FROM Customers WHERE CustomerID REGEXP '^[0-9]+$';";
-                int tempID = DB.GetID(genID);
-                tempID++;
-                newID = tempID.ToString();
-                newID = newID.PadLeft(5, '0');
-                //newID = (Convert.ToString(DB.GetID(genID)).PadLeft((5 - newID.Length), '0'));
-                Console.WriteLine(newID);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            customerID = InputOps.ValidateID(customerID);             // Call method that formats input and verifies it is correct.
             Console.WriteLine("Company Name:");
             String customerCompanyName = Console.ReadLine();
             Console.WriteLine("Contact Name:");
@@ -125,24 +111,13 @@ namespace REWORK
         /// </summary>
         public static void AddOrder()
         {
-            string newID = "";
             Console.WriteLine(
                 "ADD ORDER\n" +
                 "---------\n");
-            try
-            {
-                String genID = "SELECT MAX(OrderID) FROM Orders WHERE OrderID REGEXP '^[0-9]+$';";
-                int tempID = DB.GetID(genID);
-                tempID++;
-                newID = tempID.ToString();
-                newID = newID.PadLeft(5, '0');
-                //Console.WriteLine(newID);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            string orderID = newID;
+            // Generate ID for Orders OrderID field.
+            String orderIDGen = "SELECT MAX(OrderID) FROM Orders WHERE OrderID REGEXP '^[0-9]+$';";
+            string orderID = InputOps.GenerateID(orderIDGen);
+            // Gather user input for remaining fields.
             Console.WriteLine("Customer ID:");
             string orderCustomerID = Console.ReadLine();
             Console.WriteLine("Employee ID:");
@@ -171,37 +146,26 @@ namespace REWORK
             string orderShipCountry = Console.ReadLine();
 
             // Info for Order_details relation
-            Console.WriteLine("ORDER DETAILS:\n" +
+            Console.WriteLine(
+                "ORDER DETAILS:\n" +
                 "ORDER ID: " + orderID +
                 "\n--------------");
-            try
-            {
-                String genID = "SELECT MAX(ID) FROM Order_details WHERE ID REGEXP '^[0-9]+$';";
-                int tempID = DB.GetID(genID);
-                tempID++;
-                newID = tempID.ToString();
-                newID = newID.PadLeft(5, '0');
-                //Console.WriteLine(newID);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-            string orderDetailsID = newID;
-
+            // Generate ID for Order_details' ID field
+            String orderDetailsIDGen = "SELECT MAX(ID) FROM Order_details WHERE ID REGEXP '^[0-9]+$';";
+            string orderDetailsID = InputOps.GenerateID(orderDetailsIDGen);
+            // Gather info for other fields.
             Console.WriteLine("Product ID:");
             string orderDetailsProductID = Console.ReadLine();
             Console.WriteLine("Quantity:");
             string orderDetailsQuantity = Console.ReadLine();
-
+            // If item has a discount, the order gets rejected.
             string discountQuery = String.Format("SELECT Discount FROM Order_details WHERE OrderID={0}", orderID);
             string discountYN = DB.Scalar(discountQuery);
             if ( discountYN == "y")
             {
                 Console.WriteLine("!! ORDER REJECTED DUE TO DISCOUNT !!");
             }
-            else
+            else // Otherwise, submit order.
             {
                 string grabTimestamp = "SELECT Current_timestamp();";
                 grabTimestamp = DB.Scalar(grabTimestamp);
@@ -284,12 +248,76 @@ namespace REWORK
             DB.NonQuery(restockQuery);
             Console.WriteLine("All products with < 10 remaining units have been restocked with 10 more units.");
         }
-        public static void InputValidation(string input)
-        {
-            if(input == "")
-            {
+    }
 
+    /// <summary>
+    /// Methods here are called from the UI class.
+    /// </summary>
+    public class InputOps
+    {
+        public static string GenerateID(string input)
+        {
+            string newID = "";
+            int tempID;
+            try
+            {
+                tempID = DB.GetID(input);
+                tempID++;
+                newID = tempID.ToString();
+                newID = newID.PadLeft(5, '0');
             }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            return newID;
+        }
+
+        /// <summary>
+        /// Method used to validate input for customerID.
+        /// Entirely used to offload tasks from UI class since it really
+        /// should only be dealing with user input and not the actual
+        /// functions related to DB queries.
+        /// </summary>
+        /// <param name="input"></param>
+        public static string ValidateID(string input)
+        {
+            string newID = "";
+            int tempID;
+            bool duplicate = true;
+            String genID = "SELECT MAX(CustomerID) FROM Customers WHERE CustomerID REGEXP '^[0-9]+$';";
+            String checkDup = "";
+            try
+            {
+                // Remove all spaces from input string.
+                input = input.Replace(" ", String.Empty).ToUpper();
+                // If string is longer than 5 char, trim down to 5.
+                if (input.Length >= 5) {input = input.Remove(5, input.Length - 5);}
+                // Generate new ID
+                tempID = DB.GetID(genID);
+                while (duplicate == true)
+                {
+                    newID = tempID.ToString();
+                    newID = (input + newID.PadLeft((5 - input.Length), '0')).Remove(0,1);
+                    checkDup = String.Format("SELECT CustomerID FROM Customers WHERE CustomerID='{0}';", newID);
+                    if (DB.Scalar(checkDup) == "NULL")
+                    {
+                        if (input.Length >= 5)
+                        {
+                            input = input.Remove(5, input.Length - 5);
+                        }
+                        else
+                        {
+                            input = newID;
+                        }
+                        duplicate = false;
+                    }
+                    else
+                    {
+                        tempID++;
+                    }
+                }
+                Console.WriteLine(input);
+            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            return input;
         }
     }
     public class DB
@@ -297,17 +325,21 @@ namespace REWORK
         public static List<string> QueryDB(string input)
         {
             List<string> queryResult = new List<string>();
+            // Connection info and establish connection to server.
             string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
             MySqlConnection conn = new MySqlConnection(connStr);
-            Console.WriteLine("Connecting...");
             try
             {
+                // Open connection
                 conn.Open();
+                // Set commands and begin reading query results.
                 MySqlCommand cmd = new MySqlCommand(input, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    //queryResult.Add(rdr.GetString(rdr.GetOrdinal()));\
+                    //queryResult.Add(rdr.GetString(rdr.GetOrdinal())); THIS ALSO WORKS BUT ISNT NEEDED ANYMORE
+                    // Below used to output in an easily read format using -- as a delimiter between values
+                    // and NULL is filled in for null values in the tables.
                     string filterNull = "";
                     for(int i = 0; i<rdr.FieldCount; i++)
                     {
@@ -328,78 +360,89 @@ namespace REWORK
                             filterNull += "NULL";
                         }
                     }
+                    // Add to List.
                     queryResult.Add(filterNull);
+                    // Alternate input methods below.
                     //queryResult.Add(rdr.GetString(rdr[0] + " -- " + rdr[1] + " -- " + rdr[2] + " -- " + rdr[3] + " -- " + rdr[4] + " -- " + rdr[5]));
                     //Console.WriteLine(rdr[0] + " -- " + rdr[1]);
                 }
                 rdr.Close();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
             for (int i = 0; i < queryResult.Count; i++ )
             {
                 Console.WriteLine(queryResult[i]);
             }
             return queryResult;
         }
+        /// <summary>
+        /// This method is used to INPUT and UPDATE the database.
+        /// Very similar build to the QueryDB method but uses ExecuteNonQuery function instead.
+        /// No return values needed since this only write to DB.
+        /// </summary>
+        /// <param name="input"></param>
         public static void NonQuery(string input)
         {
             string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(input, conn);
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
             conn.Close();
         }
+        /// <summary>
+        /// Similar to previous two methods but this is used when only a single
+        /// value will be returned by a query.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static string Scalar(string input)
         {
             string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
+            object result = null;
+            string output = "";
             MySqlConnection conn = new MySqlConnection(connStr);
-            string result = "";
             try
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(input, conn);
-                result = cmd.ExecuteScalar().ToString();
+                result = cmd.ExecuteScalar();
+                // When null value returned, set to actual string NULL to prevent parsing errors.
+                // Otherwise just return the value given by query.
+                if (result == null || DBNull.Value == result) { output = "NULL"; }
+                else { output = result.ToString(); }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
             conn.Close();
-            return result;
+            return output;
         }
+        /// <summary>
+        /// Method used to return int value associated with the ID fields of each relation.
+        /// Takes string query input.
+        /// Mostly finds highest value ID.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static Int32 GetID(string input)
         {
-            Int32 r = 0;
+            object result = null;
             string connStr = "server=localhost;user=root;database=northwind;port=3306;password=toor;";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(input, conn);
-                object result = cmd.ExecuteScalar();
-                if ( result != null )
-                {
-                    r = Convert.ToInt32(result);
-                }
+                result = cmd.ExecuteScalar();
+                if ( result != null && DBNull.Value != result ) { result = Convert.ToInt32(result); }
+                else if (result == null || DBNull.Value == result) { result = "NULL"; }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
             conn.Close();
-            return r;
+            return Convert.ToInt32(result);
         }
     }
 }
