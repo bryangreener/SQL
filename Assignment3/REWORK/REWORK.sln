@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 2015
+VisualStudioVersion = 13.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REWORK", "REWORK\REWORK.csproj", "{DC277DBE-7388-45D6-B790-2B7FF8D0CC1F}"
 EndProject
