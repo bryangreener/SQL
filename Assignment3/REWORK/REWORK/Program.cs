@@ -521,6 +521,7 @@ namespace REWORK
 		public static List<string> QueryDB(string input)
 		{
 			List<string> queryResult = new List<string>();
+			List<string> customerLink = new List<string>();
 			// Connection info and establish connection to server.
 			// Defaults are server=localhost db=northwind port=3306 un=root pw=toor
 			string user = ConfigurationManager.AppSettings["User"];
@@ -534,7 +535,6 @@ namespace REWORK
 			{
 				// Open connection
 				conn.Open();
-				Console.WriteLine("CONNECTED");
 				// Set commands and begin reading query results.
 				MySqlCommand cmd = new MySqlCommand(input, conn);
 				MySqlDataReader rdr = cmd.ExecuteReader();
@@ -547,6 +547,7 @@ namespace REWORK
 					string filterNull = "";
 					for (int i = 0; i < rdr.FieldCount; i++)
 					{
+						customerLink.Add(rdr[1].ToString());
 						if (!rdr.IsDBNull(i) && i != rdr.FieldCount - 1)
 						{
 							filterNull += rdr[i] + " -- ";
@@ -575,6 +576,8 @@ namespace REWORK
 			for (int i = 0; i < queryResult.Count; i++)
 			{
 				Console.WriteLine(queryResult[i]);
+				string cInfo = $"SELECT * FROM Customers WHERE CustomerID='{customerLink[i]}';";
+				Console.WriteLine(QueryDB(cInfo));
 			}
 			return queryResult;
 		}
