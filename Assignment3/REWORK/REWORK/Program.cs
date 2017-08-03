@@ -56,7 +56,7 @@ namespace REWORK
 		public static Int16 mainUI()
 		{
             // Clear console used to make view a bit cleaner. Used at beginning of all UI methods.
-            Console.Clear();
+            //Console.Clear();
 			
 			// Variable used to break do while loop.
 			bool validateInput = false;
@@ -104,7 +104,7 @@ namespace REWORK
 		/// </summary>
 		public static void AddCustomer()
 		{
-            Console.Clear();
+            //Console.Clear();
 
             // Ask for user input to fill out fields. Each input is checked to make sure it is not empty.
 			Console.WriteLine(
@@ -165,7 +165,7 @@ namespace REWORK
 		/// </summary>
 		public static void AddOrder()
 		{
-            Console.Clear();
+            //Console.Clear();
 
 			Console.WriteLine(
 				"ADD ORDER\n" +
@@ -181,9 +181,9 @@ namespace REWORK
             Console.WriteLine("Employee ID:");
 			string eid = Console.ReadLine();
             eid = ValidateInput(eid);
-            Console.WriteLine("Order Date:");
-			string oDate = Console.ReadLine();
-            oDate = ValidateInput(oDate);
+            //Console.WriteLine("Order Date:");
+            string oDate;// = Console.ReadLine();
+            //oDate = ValidateInput(oDate);
             Console.WriteLine("Required Date:");
 			string rDate = Console.ReadLine();
             rDate = ValidateInput(rDate);
@@ -228,15 +228,16 @@ namespace REWORK
             // Gather info for other fields.
 			Console.WriteLine("Product ID:");
 			string detailID = Console.ReadLine();
-            detailID = ValidateInput(detailID);
+            //detailID = ValidateInput(detailID);
             Console.WriteLine("Quantity:");
 			string quantity = Console.ReadLine();
             quantity = ValidateInput(quantity);
 
             // If item has a discount, the order gets rejected.
-            string discountQuery = $"SELECT Discount FROM Order_details WHERE OrderID={orderID}";
-			string discountYN = Scalar(discountQuery);
-			if (discountYN == "y")
+            string discontQuery = $"SELECT Discontinued FROM Products WHERE ProductID={detailID}";
+            string discontYN = Scalar(discontQuery);
+
+			if (discontYN == "y")
 			{
 				Console.WriteLine("!! ORDER REJECTED DUE TO DISCOUNT !!");
 			}
@@ -244,21 +245,25 @@ namespace REWORK
 			{
 				string grabTimestamp = "SELECT Current_timestamp();";
 				grabTimestamp = Scalar(grabTimestamp);
+                oDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");//grabTimestamp;
 
 				// Update number of units on order by adding 1
-				string updateUnitsOnOrderAdd = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{detailID}'; COMMIT;";
+				string updateUnitsOnOrderAdd = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder=UnitsOnOrder+{quantity} WHERE ProductID={detailID}; COMMIT;";
 				NonQuery(updateUnitsOnOrderAdd);
 
 				// Add new row to Orders
-				string orderQuery = "START TRANSACTION; INSERT INTO Orders (OrderID,CustomerID,EmployeeID,RequiredDate,ShippedDate" +
+				string orderQuery = "START TRANSACTION; INSERT INTO Orders (OrderID,CustomerID,EmployeeID,OrderDate,RequiredDate,ShippedDate" +
 				",ShipVia,Freight,ShipName,ShipAddress,ShipCity,ShipRegion,ShipPostalCode,ShipCountry) VALUES" +
-				$"('{orderID}','{cid}','{eid}','{oDate}','{sDate}','{sVia}','{freight}','{sName}','{sAddr}','{sCity}','{sRegion}','{sPostal}','{sCountry}'); COMMIT;";
+				$"('{orderID}','{cid}','{eid}','{oDate}','{rDate}','{sDate}','{sVia}','{freight}','{sName}','{sAddr}','{sCity}','{sRegion}','{sPostal}','{sCountry}'); COMMIT;";
 				NonQuery(orderQuery);
-
+                string zero = "0";
 				// Add new row to Order_details
-				string productUnitPriceQuery = $"START TRANSACTION; SELECT UnitPrice FROM Products WHERE ProductID = '{detailID}";
+				string productUnitPriceQuery = $"START TRANSACTION; SELECT UnitPrice FROM Products WHERE ProductID={detailID}";
+                string unitPrice = Scalar(productUnitPriceQuery);
+                double price = Convert.ToDouble(unitPrice);
+                price = Convert.ToDouble(unitPrice);
 				string orderDetailsQuery = "INSERT INTO Order_details (ID,OrderID,ProductID,UnitPrice,Quantity,Discount) VALUES" +
-					$"('{orderDetailsID}','{orderID}','{detailID}','{productUnitPriceQuery}','{quantity}','{discountYN}'); COMMIT;";
+					$"('{orderDetailsID}','{orderID}','{detailID}','{price}','{quantity}','{zero}'); COMMIT;";
 				NonQuery(orderDetailsQuery);
 			}
 
@@ -274,7 +279,7 @@ namespace REWORK
         /// </summary>
 		public static void RemoveOrder()
 		{
-            Console.Clear();
+            //Console.Clear();
 
 			Console.WriteLine("REMOVE ORDER\n" +
 							  "------------\n" +
@@ -291,9 +296,11 @@ namespace REWORK
                 string removeOrderDetailsQuery = $"START TRANSACTION; DELETE FROM Order_details WHERE OrderID='{rid}'; COMMIT;";
                 string pid = $"SELECT ProductID FROM Order_details WHERE OrderID='{rid}'";
                 pid = Scalar(pid);
-                string updateUnitsOnOrderRemove = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder = UnitsOnOrder+1 WHERE ProductID = '{pid}'; COMMIT;";
+                string uoo = $"SELECT Quantity FROM Order_details WHERE OrderID='{rid}'";
+                uoo = Scalar(uoo);
+                string updateUnitsOnOrderRemove = $"START TRANSACTION; UPDATE Products SET UnitsOnOrder = UnitsOnOrder-'{uoo}' WHERE ProductID = '{pid}'; COMMIT;";
                 NonQuery(updateUnitsOnOrderRemove);
-                NonQuery(removeOrderQuery);
+                //NonQuery(removeOrderQuery);
                 NonQuery(removeOrderDetailsQuery);
             } // Otherwise...
             else { Console.WriteLine($"NO ORDER WITH ID '{rid}' FOUND."); }
@@ -311,7 +318,7 @@ namespace REWORK
 		/// </summary>
 		public static void ShipOrder()
 		{
-            Console.Clear();
+            //Console.Clear();
 
             string id = "";
             string validateOrderIDQuery = "";
@@ -360,7 +367,7 @@ namespace REWORK
 		/// </summary>
 		public static void Print()
 		{
-            Console.Clear();
+            //Console.Clear();
 
             // Header formatting. space string used to simplify formatting.
             string space = "";
@@ -385,7 +392,7 @@ namespace REWORK
 		/// </summary>
 		public static void Restock()
 		{
-            Console.Clear();
+            //Console.Clear();
 
             // Update DB. See writeline for explanation.
 			string restockQuery = "START TRANSACTION; UPDATE Products SET UnitsInStock = UnitsInStock+50 WHERE UnitsInStock<10; COMMIT;";
@@ -577,10 +584,65 @@ namespace REWORK
 			{
 				Console.WriteLine(queryResult[i]);
 				string cInfo = $"SELECT * FROM Customers WHERE CustomerID='{customerLink[i]}';";
-				Console.WriteLine(QueryDB(cInfo));
+				customerQuery(cInfo);
 			}
 			return queryResult;
 		}
+        public static void customerQuery(string input)
+        {
+            string queryResult = "";
+            // Connection info and establish connection to server.
+            // Defaults are server=localhost db=northwind port=3306 un=root pw=toor
+            string user = ConfigurationManager.AppSettings["User"];
+            string password = ConfigurationManager.AppSettings["Password"];
+            string server = ConfigurationManager.AppSettings["Server"];
+            string db = ConfigurationManager.AppSettings["DB"];
+            string port = ConfigurationManager.AppSettings["Port"];
+            string connStr = $"server={server};user={user};database={db};port={port};password={password};";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                // Open connection
+                conn.Open();
+                // Set commands and begin reading query results.
+                MySqlCommand cmd = new MySqlCommand(input, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    //queryResult.Add(rdr.GetString(rdr.GetOrdinal())); THIS ALSO WORKS BUT ISNT NEEDED ANYMORE
+
+                    // Below used to output in an easily read format using " -- " as a delimiter between values
+                    // "NULL" is filled in for null values in relation.
+                    string filterNull = "";
+                    for (int i = 0; i < rdr.FieldCount; i++)
+                    {
+                        if (!rdr.IsDBNull(i) && i != rdr.FieldCount - 1)
+                        {
+                            filterNull += rdr[i] + " -- ";
+                        }
+                        else if (!rdr.IsDBNull(i) && i == (rdr.FieldCount - 1))
+                        {
+                            filterNull += rdr[i];
+                        }
+                        else if (rdr.IsDBNull(i) && i != rdr.FieldCount - 1)
+                        {
+                            filterNull += "NULL -- ";
+                        }
+                        else if (rdr.IsDBNull(i) && i == (rdr.FieldCount - 1))
+                        {
+                            filterNull += "NULL";
+                        }
+                    }
+                    // Add to List.
+                    Console.WriteLine(filterNull);
+                    Console.WriteLine();
+                }
+                rdr.Close();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
+            conn.Close();
+
+        }
 		/// <summary>
 		/// This method is used to INPUT and UPDATE the database.
 		/// Very similar build to the QueryDB method but uses ExecuteNonQuery function instead.
