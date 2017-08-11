@@ -13,7 +13,7 @@ namespace Project.Controllers
     {
         // new instance of database
         private FinalProjectEntities db = new FinalProjectEntities();
-
+        
         // GET: Computer
         public ActionResult Index()
         {
@@ -90,7 +90,25 @@ namespace Project.Controllers
         {
             if(ModelState.IsValid)
             {
-                db.computers.Attach(computer);
+                /*
+                device device = new device();
+                device.id = computer.id;
+                device.type = "Computer";
+                device.location = computer.location;
+                device.installedOn = Convert.ToDateTime(computer.installedOn);
+                device.active = computer.active;*/
+                db.devices.Add(new device()
+                {
+                    id = computer.id,
+                    type = "Computer",
+                    location = computer.location,
+                    installedOn = Convert.ToDateTime(computer.installedOn),
+                    active = computer.active
+                });
+                db.SaveChanges();
+                //string device = $"{computer.id},Computer,{computer.location},{computer.installedOn},{computer.active}";
+                db.computers.Add(computer);
+                //db.Entry(computer).State = EntityState.Added;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

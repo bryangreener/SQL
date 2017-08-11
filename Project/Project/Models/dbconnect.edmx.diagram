@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="FinalProjectModel.firewall" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FinalProjectModel.router" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="FinalProjectModel.server" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="FinalProjectModel.switch" Width="1.5" PointX="4.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FinalProjectModel.switch" Width="1.5" PointX="7.125" PointY="3.375" IsExpanded="true" />
         <EntityTypeShape EntityType="FinalProjectModel.wap" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>

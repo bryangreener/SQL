@@ -11,7 +11,7 @@
     <fieldset>
         <legend>Search Filter</legend>
         @{
-            using (Html.BeginForm("Filter", "Computers", FormMethod.Post, new { @class = "form-inline" }))
+            using (Html.BeginForm("Filter", "Computer", FormMethod.Post, new { @class = "form-inline" }))
             {
                 // This is a CSRF (Cross Site Request Forgery) Token
                 @Html.AntiForgeryToken()
