@@ -16,32 +16,37 @@ USE `FinalProject`;
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-DROP TABLE IF EXISTS `Devices`;
-CREATE TABLE `Devices` (
-`id`			varchar(8),
-`type`			varchar(10),
-`location`		varchar(30),
-`installedOn`	varchar(30),
-`active`		bool DEFAULT TRUE,
-PRIMARY KEY (`id`),
-KEY `FK_ activeDevices` (`active`)
+DROP TABLE IF EXISTS Devices;
+CREATE TABLE Devices (
+id				varchar(8),
+type			varchar(10),
+location		varchar(30),
+installedOn	varchar(30),
+active		bool DEFAULT TRUE,
+PRIMARY KEY (id),
+KEY FK_activeDevices (active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-DROP TABLE IF EXISTS `Computer`;
-CREATE TABLE `Computer` (
-`id`			varchar(8),
-`os`			varchar(20),
-`location`		varchar(30),
-`installedOn`	varchar(30),
-`active`		bool DEFAULT TRUE,
-PRIMARY KEY (`id`),
-KEY `FK_computer_active` (`active`),
-CONSTRAINT `FK_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+DROP TABLE IF EXISTS Computer;
+CREATE TABLE Computer (
+id			varchar(8),
+os			varchar(20),
+location		varchar(30),
+installedOn	varchar(30),
+active		bool DEFAULT TRUE,
+PRIMARY KEY (id),
+KEY FK_computer_active (active),
+CONSTRAINT FK_active FOREIGN KEY(active) REFERENCES Devices (active) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SHOW ENGINE InnoDB STATUS;
+
+CREATE TRIGGER ComputerDelete BEFORE DELETE ON Computer
+FOR EACH ROW
+UPDATE Devices SET active = false
+WHERE Computer.id = Devices.id;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
