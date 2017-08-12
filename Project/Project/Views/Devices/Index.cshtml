@@ -33,9 +33,6 @@
 </div>
 <br />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -59,7 +56,7 @@
     @foreach (var item in Model)
     {
         // ADDED CODE TO THIS TAG TO ALLOW CLICKABLE TABLE ROWS
-        <tr onclick="location.href = '@Url.Action("Edit", "Devices", new { id=item.id })'">
+        <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.id)
             </td>
@@ -74,10 +71,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.active)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.id })
             </td>
         </tr>
     }

@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class DevicesController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: device
         public ActionResult Index()
@@ -71,7 +71,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            device dev = db.devices.Find(Convert.ToInt32(id));
+            device dev = db.devices.Find(id);
             if (dev == null)
             {
                 return HttpNotFound();

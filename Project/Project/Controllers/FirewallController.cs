@@ -12,12 +12,12 @@ namespace Project.Controllers
     public class FirewallController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: Firewall
         public ActionResult Index()
         {
-            DbSet<firewall> FWToFilter = db.firewalls;
+            /*DbSet<firewall> FWToFilter = db.firewalls;
             string filterID = "";
             string filterIntIP = "";
             string filterExtIP = "";
@@ -71,16 +71,16 @@ namespace Project.Controllers
 
 
             IEnumerable<firewall> filtered = FWToFilter.Where(fw => fw.id.ToString() == filterID &&
-                                                                        fw.intIP.ToString() ==filterIntIP &&
-                                                                        fw.extIP.ToString() == filterExtIP &&
-                                                                        fw.dns.ToString() == filterDNS &&
-                                                                        fw.network.ToString() == filterNetwork &&
+                                                                        fw.intIP.Contains(filterIntIP) &&
+                                                                        fw.extIP.Contains(filterExtIP) &&
+                                                                        fw.dns.Contains(filterDNS) &&
+                                                                        fw.network.Contains(filterNetwork) &&
                                                                         fw.location.Contains(filterLoc) &&
                                                                         fw.installedOn.ToString() == filterIns &&
                                                                         fw.active.ToString() == filterAct);
             IEnumerable<firewall> finalFiltered = filtered.ToList();
             //return View(finalFiltered);
-
+            */
             // This line returns the entire db entry ignoring filter since filtering isnt working.
             return View(db.firewalls.ToList());
         }
@@ -92,7 +92,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            firewall fw = db.firewalls.Find(Convert.ToInt32(id));
+            firewall fw = db.firewalls.Find(id);
             if (fw == null)
             {
                 return HttpNotFound();
@@ -109,7 +109,7 @@ namespace Project.Controllers
         // POST: firewall/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,os,location,installedOn,active")] firewall firewall)
+        public ActionResult Create([Bind(Include = "id,intIP,extIP,dns,network,location,installedOn,active")] firewall firewall)
         {
             if (ModelState.IsValid)
             {
@@ -119,7 +119,7 @@ namespace Project.Controllers
                     id = firewall.id,
                     type = "Firewall",
                     location = firewall.location,
-                    installedOn = Convert.ToDateTime(firewall.installedOn),
+                    installedOn = firewall.installedOn,
                     active = firewall.active
                 });
 
@@ -141,7 +141,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create firewall object and populate with data from item in relation matching given ID
-            firewall firewall = db.firewalls.Find(Convert.ToInt32(id));
+            firewall firewall = db.firewalls.Find(id);
 
             // Error handling
             if (id == null)
@@ -160,12 +160,12 @@ namespace Project.Controllers
         // POST: firewall/edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,OS,Location,InstalledOn,Active")] firewall firewall)
+        public ActionResult Edit([Bind(Include = "id,intIP,extIP,dns,network,location,installedOn,active")] firewall firewall)
         {
             if (ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(firewall.id));
+                var oldDev = db.devices.Find(firewall.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -180,7 +180,7 @@ namespace Project.Controllers
                     id = firewall.id,
                     type = oldType,
                     location = firewall.location,
-                    installedOn = Convert.ToDateTime(firewall.installedOn),
+                    installedOn = firewall.installedOn,
                     active = firewall.active
                 });
 
@@ -206,7 +206,7 @@ namespace Project.Controllers
             }
 
             // Create new firewall object and populate with data from db
-            firewall firewall = db.firewalls.Find(Convert.ToInt32(id));
+            firewall firewall = db.firewalls.Find(id);
 
             // More error handling
             if (firewall == null)
@@ -224,8 +224,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new firewall and device objects and populate with db data
-            firewall firewall = db.firewalls.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            firewall firewall = db.firewalls.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove firewall
             db.firewalls.Remove(firewall);

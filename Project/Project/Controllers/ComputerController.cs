@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class ComputerController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
         
         // GET: Computer
         public ActionResult Index()
@@ -71,7 +71,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            computer comp = db.computers.Find(Convert.ToInt32(id));
+            computer comp = db.computers.Find(id);
             if(comp == null)
             {
                 return HttpNotFound();
@@ -98,7 +98,7 @@ namespace Project.Controllers
                     id = computer.id,
                     type = "Computer",
                     location = computer.location,
-                    installedOn = Convert.ToDateTime(computer.installedOn),
+                    installedOn = computer.installedOn,
                     active = computer.active
                 });
 
@@ -120,7 +120,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create computer object and populate with data from item in relation matching given ID
-            computer computer = db.computers.Find(Convert.ToInt32(id));
+            computer computer = db.computers.Find(id);
 
             // Error handling
             if(id==null)
@@ -144,7 +144,7 @@ namespace Project.Controllers
             if(ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(computer.id));
+                var oldDev = db.devices.Find(computer.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -159,7 +159,7 @@ namespace Project.Controllers
                     id = computer.id,
                     type = oldType,
                     location = computer.location,
-                    installedOn = Convert.ToDateTime(computer.installedOn),
+                    installedOn = computer.installedOn,
                     active = computer.active
                 });
                 
@@ -185,7 +185,7 @@ namespace Project.Controllers
             }
 
             // Create new computer object and populate with data from db
-            computer computer = db.computers.Find(Convert.ToInt32(id));
+            computer computer = db.computers.Find(id);
 
             // More error handling
             if(computer == null)
@@ -203,8 +203,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new computer and device objects and populate with db data
-            computer computer = db.computers.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            computer computer = db.computers.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove computer
             db.computers.Remove(computer);

@@ -14,13 +14,13 @@ namespace Project.Models
     
     public partial class firewall
     {
-        public int id { get; set; }
-        public byte[] intIP { get; set; }
-        public byte[] extIP { get; set; }
-        public byte[] dns { get; set; }
-        public byte[] network { get; set; }
+        public string id { get; set; }
+        public string intIP { get; set; }
+        public string extIP { get; set; }
+        public string dns { get; set; }
+        public string network { get; set; }
         public string location { get; set; }
-        public Nullable<System.DateTime> installedOn { get; set; }
+        public string installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }
 }

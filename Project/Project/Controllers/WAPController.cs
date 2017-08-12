@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class WAPController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: wap
         public ActionResult Index()
@@ -53,7 +53,7 @@ namespace Project.Controllers
 
 
             IEnumerable<wap> filtered = WToFilter.Where(w => w.id.ToString() == filterID &&
-                                                                        w.ip.ToString() == filterIP &&
+                                                                        w.ip.Contains(filterIP) &&
                                                                         w.location.Contains(filterLoc) &&
                                                                         w.installedOn.ToString() == filterIns &&
                                                                         w.active.ToString() == filterAct);
@@ -71,7 +71,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            wap w = db.waps.Find(Convert.ToInt32(id));
+            wap w = db.waps.Find(id);
             if (w == null)
             {
                 return HttpNotFound();
@@ -98,7 +98,7 @@ namespace Project.Controllers
                     id = wap.id,
                     type = "WAP",
                     location = wap.location,
-                    installedOn = Convert.ToDateTime(wap.installedOn),
+                    installedOn = wap.installedOn,
                     active = wap.active
                 });
 
@@ -120,7 +120,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create wap object and populate with data from item in relation matching given ID
-            wap wap = db.waps.Find(Convert.ToInt32(id));
+            wap wap = db.waps.Find(id);
 
             // Error handling
             if (id == null)
@@ -144,7 +144,7 @@ namespace Project.Controllers
             if (ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(wap.id));
+                var oldDev = db.devices.Find(wap.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -159,7 +159,7 @@ namespace Project.Controllers
                     id = wap.id,
                     type = oldType,
                     location = wap.location,
-                    installedOn = Convert.ToDateTime(wap.installedOn),
+                    installedOn = wap.installedOn,
                     active = wap.active
                 });
 
@@ -185,7 +185,7 @@ namespace Project.Controllers
             }
 
             // Create new wap object and populate with data from db
-            wap wap = db.waps.Find(Convert.ToInt32(id));
+            wap wap = db.waps.Find(id);
 
             // More error handling
             if (wap == null)
@@ -203,8 +203,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new wap and device objects and populate with db data
-            wap wap = db.waps.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            wap wap = db.waps.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove wap
             db.waps.Remove(wap);

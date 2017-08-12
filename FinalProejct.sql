@@ -189,7 +189,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `Switch`;
 CREATE TABLE `Switch` (
 `id`			varchar(8),
-`type`			varchar(1),
+`type`			varchar(10),
 `ip`			varchar(16),
 `location`		varchar(30),
 `installedOn`	varchar(30),

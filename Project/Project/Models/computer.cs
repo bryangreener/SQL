@@ -14,10 +14,10 @@ namespace Project.Models
     
     public partial class computer
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string os { get; set; }
         public string location { get; set; }
-        public Nullable<System.DateTime> installedOn { get; set; }
+        public string installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }
 }

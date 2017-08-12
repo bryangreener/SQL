@@ -14,11 +14,10 @@ namespace Project.Models
     
     public partial class wap
     {
-
-        public int id { get; set; }
-        public byte[] ip { get; set; }
+        public string id { get; set; }
+        public string ip { get; set; }
         public string location { get; set; }
-        public Nullable<System.DateTime> installedOn { get; set; }
+        public string installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }
 }

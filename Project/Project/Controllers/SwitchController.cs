@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class SwitchController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: switch
         public ActionResult Index()
@@ -59,8 +59,8 @@ namespace Project.Controllers
 
 
             IEnumerable<@switch> filtered = SWToFilter.Where(sw => sw.id.ToString() == filterID &&
-                                                                        sw.type.ToString() == filterType &&
-                                                                        sw.ip.ToString() == filterIP &&
+                                                                        sw.type.Contains(filterType) &&
+                                                                        sw.ip.Contains(filterIP) &&
                                                                         sw.location.Contains(filterLoc) &&
                                                                         sw.installedOn.ToString() == filterIns &&
                                                                         sw.active.ToString() == filterAct);
@@ -78,7 +78,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            @switch sw = db.switches.Find(Convert.ToInt32(id));
+            @switch sw = db.switches.Find(id);
             if (sw == null)
             {
                 return HttpNotFound();
@@ -105,7 +105,7 @@ namespace Project.Controllers
                     id = sw.id,
                     type = "Switch",
                     location = sw.location,
-                    installedOn = Convert.ToDateTime(sw.installedOn),
+                    installedOn = sw.installedOn,
                     active = sw.active
                 });
 
@@ -127,7 +127,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create switch object and populate with data from item in relation matching given ID
-            @switch sw = db.switches.Find(Convert.ToInt32(id));
+            @switch sw = db.switches.Find(id);
 
             // Error handling
             if (id == null)
@@ -151,7 +151,7 @@ namespace Project.Controllers
             if (ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(sw.id));
+                var oldDev = db.devices.Find(sw.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -166,7 +166,7 @@ namespace Project.Controllers
                     id = sw.id,
                     type = oldType,
                     location = sw.location,
-                    installedOn = Convert.ToDateTime(sw.installedOn),
+                    installedOn = sw.installedOn,
                     active = sw.active
                 });
 
@@ -192,7 +192,7 @@ namespace Project.Controllers
             }
 
             // Create new switch object and populate with data from db
-            @switch sw = db.switches.Find(Convert.ToInt32(id));
+            @switch sw = db.switches.Find(id);
 
             // More error handling
             if (sw == null)
@@ -210,8 +210,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new switch and device objects and populate with db data
-            @switch sw = db.switches.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            @switch sw = db.switches.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove switch
             db.switches.Remove(sw);

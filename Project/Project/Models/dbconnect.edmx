@@ -9,80 +9,84 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="os" Type="varchar" MaxLength="20" />
           <Property Name="location" Type="varchar" MaxLength="30" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="devices">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="type" Type="varchar" MaxLength="10" />
           <Property Name="location" Type="varchar" MaxLength="30" />
-          <Property Name="installedOn" Type="date" Nullable="false" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="firewall">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="intIP" Type="varbinary" MaxLength="16" />
-          <Property Name="extIP" Type="varbinary" MaxLength="16" />
-          <Property Name="dns" Type="varbinary" MaxLength="16" />
-          <Property Name="network" Type="varbinary" MaxLength="16" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="intIP" Type="varchar" MaxLength="16" />
+          <Property Name="extIP" Type="varchar" MaxLength="16" />
+          <Property Name="dns" Type="varchar" MaxLength="16" />
+          <Property Name="network" Type="varchar" MaxLength="16" />
+          <Property Name="location" Type="varchar" MaxLength="30" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="router">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="intIP" Type="varbinary" MaxLength="16" />
-          <Property Name="extIP" Type="varbinary" MaxLength="16" />
-          <Property Name="dns" Type="varbinary" MaxLength="16" />
-          <Property Name="network" Type="varbinary" MaxLength="16" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="intIP" Type="varchar" MaxLength="16" />
+          <Property Name="extIP" Type="varchar" MaxLength="16" />
+          <Property Name="dns" Type="varchar" MaxLength="16" />
+          <Property Name="network" Type="varchar" MaxLength="16" />
+          <Property Name="location" Type="varchar" MaxLength="30" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="server">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="os" Type="varchar" MaxLength="20" />
-          <Property Name="ip1" Type="varbinary" MaxLength="16" />
-          <Property Name="ip2" Type="varbinary" MaxLength="16" />
-          <Property Name="ip3" Type="varbinary" MaxLength="16" />
-          <Property Name="ip4" Type="varbinary" MaxLength="16" />
-          <Property Name="dns" Type="varbinary" MaxLength="16" />
-          <Property Name="network" Type="varbinary" MaxLength="16" />
+          <Property Name="ip1" Type="varchar" MaxLength="16" />
+          <Property Name="ip2" Type="varchar" MaxLength="16" />
+          <Property Name="ip3" Type="varchar" MaxLength="16" />
+          <Property Name="ip4" Type="varchar" MaxLength="16" />
+          <Property Name="dns" Type="varchar" MaxLength="16" />
+          <Property Name="network" Type="varchar" MaxLength="16" />
           <Property Name="roles" Type="varchar" MaxLength="50" />
           <Property Name="location" Type="varchar" MaxLength="30" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="switch">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="type" Type="int" />
-          <Property Name="ip" Type="varbinary" MaxLength="16" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="1" />
+          <Property Name="ip" Type="varchar" MaxLength="16" />
+          <Property Name="location" Type="varchar" MaxLength="30" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityType Name="wap">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="ip" Type="varbinary" MaxLength="16" />
-          <Property Name="installedOn" Type="date" />
+          <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+          <Property Name="ip" Type="varchar" MaxLength="16" />
+          <Property Name="location" Type="varchar" MaxLength="30" />
+          <Property Name="installedOn" Type="varchar" MaxLength="30" />
           <Property Name="active" Type="bool" />
         </EntityType>
         <EntityContainer Name="FinalProjectModelStoreContainer">
@@ -103,83 +107,87 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="os" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="device">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="installedOn" Type="DateTime" Nullable="false" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="firewall">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="intIP" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="extIP" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="dns" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="network" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="intIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="extIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="router">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="intIP" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="extIP" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="dns" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="network" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="intIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="extIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="server">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="os" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ip1" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="ip2" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="ip3" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="ip4" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="dns" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="network" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ip1" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="ip2" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="ip3" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="ip4" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
           <Property Name="roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="switch">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="type" Type="Int32" />
-          <Property Name="ip" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ip" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
         <EntityType Name="wap">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="ip" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="installedOn" Type="DateTime" />
+          <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ip" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="active" Type="Boolean" />
         </EntityType>
-        <EntityContainer Name="FinalProjectEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="FinalProjectEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="computers" EntityType="Self.computer" />
           <EntitySet Name="devices" EntityType="Self.device" />
           <EntitySet Name="firewalls" EntityType="Self.firewall" />
@@ -193,7 +201,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="FinalProjectModelStoreContainer" CdmEntityContainer="FinalProjectEntities">
+        <EntityContainerMapping StorageEntityContainer="FinalProjectModelStoreContainer" CdmEntityContainer="FinalProjectEntities1">
           <EntitySetMapping Name="computers">
             <EntityTypeMapping TypeName="FinalProjectModel.computer">
               <MappingFragment StoreEntitySet="computer">
@@ -224,6 +232,7 @@
                 <ScalarProperty Name="extIP" ColumnName="extIP" />
                 <ScalarProperty Name="dns" ColumnName="dns" />
                 <ScalarProperty Name="network" ColumnName="network" />
+                <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="installedOn" ColumnName="installedOn" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
@@ -237,6 +246,7 @@
                 <ScalarProperty Name="extIP" ColumnName="extIP" />
                 <ScalarProperty Name="dns" ColumnName="dns" />
                 <ScalarProperty Name="network" ColumnName="network" />
+                <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="installedOn" ColumnName="installedOn" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
@@ -266,6 +276,7 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="installedOn" ColumnName="installedOn" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
@@ -276,6 +287,7 @@
               <MappingFragment StoreEntitySet="wap">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="location" ColumnName="location" />
                 <ScalarProperty Name="installedOn" ColumnName="installedOn" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>

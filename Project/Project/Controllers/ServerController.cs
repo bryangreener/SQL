@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class ServerController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: Server
         public ActionResult Index()
@@ -96,12 +96,12 @@ namespace Project.Controllers
 
             IEnumerable<server> filtered = ServToFilter.Where(serv => serv.id.ToString() == filterID &&
                                                                         serv.os.Contains(filterOS) &&
-                                                                        serv.ip1.ToString() == filterIP1 &&
-                                                                        serv.ip2.ToString() == filterIP2 &&
-                                                                        serv.ip3.ToString() == filterIP3 &&
-                                                                        serv.ip4.ToString() == filterIP4 &&
-                                                                        serv.dns.ToString() == filterDNS &&
-                                                                        serv.network.ToString() == filterNetwork &&
+                                                                        serv.ip1.Contains(filterIP1) &&
+                                                                        serv.ip2.Contains(filterIP2) &&
+                                                                        serv.ip3.Contains(filterIP3) &&
+                                                                        serv.ip4.Contains(filterIP4) &&
+                                                                        serv.dns.Contains(filterDNS) &&
+                                                                        serv.network.Contains(filterNetwork) &&
                                                                         serv.roles.Contains(filterRoles) &&
                                                                         serv.location.Contains(filterLoc) &&
                                                                         serv.installedOn.ToString() == filterIns &&
@@ -120,7 +120,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            server serv = db.servers.Find(Convert.ToInt32(id));
+            server serv = db.servers.Find(id);
             if (serv == null)
             {
                 return HttpNotFound();
@@ -147,7 +147,7 @@ namespace Project.Controllers
                     id = server.id,
                     type = "Server",
                     location = server.location,
-                    installedOn = Convert.ToDateTime(server.installedOn),
+                    installedOn = server.installedOn,
                     active = server.active
                 });
 
@@ -169,7 +169,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create server object and populate with data from item in relation matching given ID
-            server server = db.servers.Find(Convert.ToInt32(id));
+            server server = db.servers.Find(id);
 
             // Error handling
             if (id == null)
@@ -193,7 +193,7 @@ namespace Project.Controllers
             if (ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(server.id));
+                var oldDev = db.devices.Find(server.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -208,7 +208,7 @@ namespace Project.Controllers
                     id = server.id,
                     type = oldType,
                     location = server.location,
-                    installedOn = Convert.ToDateTime(server.installedOn),
+                    installedOn = server.installedOn,
                     active = server.active
                 });
 
@@ -234,7 +234,7 @@ namespace Project.Controllers
             }
 
             // Create new server object and populate with data from db
-            server server = db.servers.Find(Convert.ToInt32(id));
+            server server = db.servers.Find(id);
 
             // More error handling
             if (server == null)
@@ -252,8 +252,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new server and device objects and populate with db data
-            server server = db.servers.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            server server = db.servers.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove server
             db.servers.Remove(server);

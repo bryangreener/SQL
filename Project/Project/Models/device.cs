@@ -14,10 +14,10 @@ namespace Project.Models
     
     public partial class device
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string type { get; set; }
         public string location { get; set; }
-        public System.DateTime installedOn { get; set; }
+        public string installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }
 }

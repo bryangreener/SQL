@@ -13,10 +13,10 @@ namespace Project.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class FinalProjectEntities : DbContext
+    public partial class FinalProjectEntities1 : DbContext
     {
-        public FinalProjectEntities()
-            : base("name=FinalProjectEntities")
+        public FinalProjectEntities1()
+            : base("name=FinalProjectEntities1")
         {
         }
     

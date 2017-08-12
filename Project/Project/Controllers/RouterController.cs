@@ -12,7 +12,7 @@ namespace Project.Controllers
     public class RouterController : Controller
     {
         // new instance of database
-        private FinalProjectEntities db = new FinalProjectEntities();
+        private FinalProjectEntities1 db = new FinalProjectEntities1();
 
         // GET: router
         public ActionResult Index()
@@ -71,10 +71,10 @@ namespace Project.Controllers
 
 
             IEnumerable<router> filtered = RToFilter.Where(r => r.id.ToString() == filterID &&
-                                                                        r.intIP.ToString() == filterIntIP &&
-                                                                        r.extIP.ToString() == filterExtIP &&
-                                                                        r.dns.ToString() == filterDNS &&
-                                                                        r.network.ToString() == filterNetwork &&
+                                                                        r.intIP.Contains(filterIntIP) &&
+                                                                        r.extIP.Contains(filterExtIP) &&
+                                                                        r.dns.Contains(filterDNS) &&
+                                                                        r.network.Contains(filterNetwork) &&
                                                                         r.location.Contains(filterLoc) &&
                                                                         r.installedOn.ToString() == filterIns &&
                                                                         r.active.ToString() == filterAct);
@@ -92,7 +92,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            router r = db.routers.Find(Convert.ToInt32(id));
+            router r = db.routers.Find(id);
             if (r == null)
             {
                 return HttpNotFound();
@@ -109,7 +109,7 @@ namespace Project.Controllers
         // POST: router/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,os,location,installedOn,active")] router router)
+        public ActionResult Create([Bind(Include = "id,intIP,extIP,dns,network,location,installedOn,active")] router router)
         {
             if (ModelState.IsValid)
             {
@@ -119,7 +119,7 @@ namespace Project.Controllers
                     id = router.id,
                     type = "Router",
                     location = router.location,
-                    installedOn = Convert.ToDateTime(router.installedOn),
+                    installedOn = router.installedOn,
                     active = router.active
                 });
 
@@ -141,7 +141,7 @@ namespace Project.Controllers
         public ActionResult Edit(string id)
         {
             // Create router object and populate with data from item in relation matching given ID
-            router router = db.routers.Find(Convert.ToInt32(id));
+            router router = db.routers.Find(id);
 
             // Error handling
             if (id == null)
@@ -160,12 +160,12 @@ namespace Project.Controllers
         // POST: router/edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,OS,Location,InstalledOn,Active")] router router)
+        public ActionResult Edit([Bind(Include = "id,intIP,extIP,dns,network,location,installedOn,active")] router router)
         {
             if (ModelState.IsValid)
             {
                 // Get old device info before deleting it
-                var oldDev = db.devices.Find(Convert.ToInt32(router.id));
+                var oldDev = db.devices.Find(router.id);
                 string oldType = oldDev.type;
                 // delete old device
                 db.devices.Remove(oldDev);
@@ -180,7 +180,7 @@ namespace Project.Controllers
                     id = router.id,
                     type = oldType,
                     location = router.location,
-                    installedOn = Convert.ToDateTime(router.installedOn),
+                    installedOn = router.installedOn,
                     active = router.active
                 });
 
@@ -206,7 +206,7 @@ namespace Project.Controllers
             }
 
             // Create new router object and populate with data from db
-            router router = db.routers.Find(Convert.ToInt32(id));
+            router router = db.routers.Find(id);
 
             // More error handling
             if (router == null)
@@ -224,8 +224,8 @@ namespace Project.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             // Create new router and device objects and populate with db data
-            router router = db.routers.Find(Convert.ToInt32(id));
-            device device = db.devices.Find(Convert.ToInt32(id));
+            router router = db.routers.Find(id);
+            device device = db.devices.Find(id);
 
             // Remove router
             db.routers.Remove(router);

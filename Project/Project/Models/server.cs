@@ -14,17 +14,17 @@ namespace Project.Models
     
     public partial class server
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string os { get; set; }
-        public byte[] ip1 { get; set; }
-        public byte[] ip2 { get; set; }
-        public byte[] ip3 { get; set; }
-        public byte[] ip4 { get; set; }
-        public byte[] dns { get; set; }
-        public byte[] network { get; set; }
+        public string ip1 { get; set; }
+        public string ip2 { get; set; }
+        public string ip3 { get; set; }
+        public string ip4 { get; set; }
+        public string dns { get; set; }
+        public string network { get; set; }
         public string roles { get; set; }
         public string location { get; set; }
-        public Nullable<System.DateTime> installedOn { get; set; }
+        public string installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }
 }

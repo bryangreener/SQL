@@ -211,13 +211,17 @@
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\SwitchController.cs" />
     <Compile Include="Controllers\WAPController.cs" />
-    <Compile Include="Models\computer.cs">
-      <DependentUpon>dbconnect.tt</DependentUpon>
-    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ComputerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\computer.cs">
+      <DependentUpon>dbconnect.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\dbconnect.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -239,30 +243,32 @@
     <Compile Include="Models\firewall.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\router.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\server.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
-    <Compile Include="Startup.cs" />
     <Compile Include="Models\switch.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\wap.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrapOLD.css" />
+    <Content Include="Content\bootstrap.minOLD.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
     <Content Include="Models\dbconnect.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>dbconnect.edmx</DependentUpon>
@@ -273,10 +279,6 @@
       <DependentUpon>dbconnect.edmx</DependentUpon>
       <LastGenOutput>dbconnect.cs</LastGenOutput>
     </Content>
-    <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
