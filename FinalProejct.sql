@@ -14,40 +14,53 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `FinalProject` /*!40100 DEFAULT CHARACT
 
 USE `FinalProject`;
 
+DROP TABLE IF EXISTS `Devices`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-DROP TABLE IF EXISTS Devices;
-CREATE TABLE Devices (
-id				varchar(8),
-type			varchar(10),
-location		varchar(30),
-installedOn	varchar(30),
-active		bool DEFAULT TRUE,
-PRIMARY KEY (id),
-KEY FK_activeDevices (active)
+CREATE TABLE `Devices` (
+`id` varchar(8),
+`type` varchar(10),
+`location` varchar(30),
+`installedOn` varchar(30),
+`active` bool DEFAULT TRUE,
+PRIMARY KEY (`id`),
+KEY `FK_activeDevices` (`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `Devices` WRITE;
+/*!40000 ALTER TABLE `Devices` DISABLE KEYS */;
+INSERT INTO `Devices` VALUES (1,'Computer','WMU CS Lab','2017-07-01',true),(2,'Laptop','Personal','2017-07-05',true);
+/*!40000 ALTER TABLE `Devices` ENABLE KEYS */;
+UNLOCK TABLES;
+
+CREATE TRIGGER `ComputerDelete` BEFORE DELETE ON `Computer` FOR EACH ROW
+UPDATE `Devices` SET `active`=false
+WHERE `Computer.id` = `Devices.id`;
+
+
+DROP TABLE IF EXISTS `Computer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-DROP TABLE IF EXISTS Computer;
-CREATE TABLE Computer (
-id			varchar(8),
-os			varchar(20),
-location		varchar(30),
-installedOn	varchar(30),
-active		bool DEFAULT TRUE,
-PRIMARY KEY (id),
-KEY FK_computer_active (active),
-CONSTRAINT FK_active FOREIGN KEY(active) REFERENCES Devices (active) ON UPDATE CASCADE ON DELETE CASCADE
+CREATE TABLE `Computer` (
+`id` varchar(8),
+`os` varchar(20),
+`location` varchar(30),
+`installedOn` varchar(30),
+`active` bool DEFAULT TRUE,
+PRIMARY KEY (`id`),
+KEY `FK_computer_active` (`active`),
+CONSTRAINT `FK_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TRIGGER ComputerDelete BEFORE DELETE ON Computer
-FOR EACH ROW
-UPDATE Devices SET active = false
-WHERE Computer.id = Devices.id;
-
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `Computer` WRITE;
+/*!40000 ALTER TABLE `Computer` DISABLE KEYS */;
+INSERT INTO `Computer` VALUES (1,'Windows 7 Pro','WMU CS Lab','2017-07-01',true),(2,'Windows 10','Personal','2017-07-05',true);
+/*!40000 ALTER TABLE `Computer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -70,6 +83,7 @@ KEY `FK_server_active` (`active`),
 CONSTRAINT `FK_server_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
