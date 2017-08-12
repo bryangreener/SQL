@@ -1,0 +1,109 @@
+﻿
+@model IEnumerable<Project.Models.router>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@* DIV CREATED FOR TEXTBOX INPUTS FOR FILTER*@
+<div class="form-group">
+    <fieldset>
+        <legend>Search Filter</legend>
+        @{
+            using (Html.BeginForm("Filter", "Router", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                // This is a CSRF (Cross Site Request Forgery) Token
+                @Html.AntiForgeryToken()
+                // BELOW ARE TEXT BOXES THAT PASS DATA THROUGH VIEWBAG
+                <label for="id">ID</label>
+                @Html.TextBox("id", (string)ViewBag.filterID)
+                <label for="intIP">Internal IP</label>
+                @Html.TextBox("intIP", (string)ViewBag.filterIntIP)
+                <label for="extIP">External IP</label>
+                @Html.TextBox("extIP", (string)ViewBag.filterExtIP)
+                <label for="dns">DNS</label>
+                @Html.TextBox("dns", (string)ViewBag.filterDNS)
+                <label for="network">Network</label>
+                @Html.TextBox("network", (string)ViewBag.filterNetwork)
+                <label for="loc">Location</label>
+                @Html.TextBox("loc", (string)ViewBag.filterLoc)
+                <label for="ins">Installed On</label>
+                @Html.TextBox("ins", (string)ViewBag.filterIns)
+                <label for="act">Active</label>
+                @Html.TextBox("act", (string)ViewBag.filterAct)
+                <input type="submit" value="Filter" class="btn btn-info pull-right" />
+            }
+        }
+    </fieldset>
+</div>
+<br />
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.intIP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.extIP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dns)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.network)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.installedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.active)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        // ADDED CODE TO THIS TAG TO ALLOW CLICKABLE TABLE ROWS
+        <tr onclick="location.href = '@Url.Action("Edit", "Router", new { id=item.id })'">
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.intIP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.extIP)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dns)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.network)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.installedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.active)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

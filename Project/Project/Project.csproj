@@ -205,6 +205,12 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\DevicesController.cs" />
+    <Compile Include="Controllers\FirewallController.cs" />
+    <Compile Include="Controllers\RouterController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\SwitchController.cs" />
+    <Compile Include="Controllers\WAPController.cs" />
     <Compile Include="Models\computer.cs">
       <DependentUpon>dbconnect.tt</DependentUpon>
     </Compile>
@@ -336,6 +342,38 @@
     <Content Include="Views\Computer\Details.cshtml" />
     <Content Include="Views\Computer\Edit.cshtml" />
     <Content Include="Views\Home\Computers.cshtml" />
+    <Content Include="Views\Firewall\Create.cshtml" />
+    <Content Include="Views\Firewall\Delete.cshtml" />
+    <Content Include="Views\Firewall\Details.cshtml" />
+    <Content Include="Views\Firewall\Edit.cshtml" />
+    <Content Include="Views\Firewall\Index.cshtml" />
+    <Content Include="Views\Server\Create.cshtml" />
+    <Content Include="Views\Server\Delete.cshtml" />
+    <Content Include="Views\Server\Details.cshtml" />
+    <Content Include="Views\Server\Edit.cshtml" />
+    <Content Include="Views\Server\Index.cshtml" />
+    <Content Include="Views\Switch\Create.cshtml" />
+    <Content Include="Views\Switch\Delete.cshtml" />
+    <Content Include="Views\Switch\Details.cshtml" />
+    <Content Include="Views\Switch\Edit.cshtml" />
+    <Content Include="Views\Switch\Index.cshtml" />
+    <Content Include="Views\WAP\Create.cshtml" />
+    <Content Include="Views\WAP\Delete.cshtml" />
+    <Content Include="Views\WAP\Details.cshtml" />
+    <Content Include="Views\WAP\Edit.cshtml" />
+    <Content Include="Views\WAP\Index.cshtml" />
+    <Content Include="Views\Devices\Index.cshtml" />
+    <Content Include="Views\Router\Create.cshtml" />
+    <Content Include="Views\Router\Delete.cshtml" />
+    <Content Include="Views\Router\Details.cshtml" />
+    <Content Include="Views\Router\Edit.cshtml" />
+    <Content Include="Views\Router\Index.cshtml" />
+    <Content Include="Views\Home\Devices.cshtml" />
+    <Content Include="Views\Home\Servers.cshtml" />
+    <Content Include="Views\Home\Switches.cshtml" />
+    <Content Include="Views\Home\WAPs.cshtml" />
+    <Content Include="Views\Home\Firewalls.cshtml" />
+    <Content Include="Views\Home\Routers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

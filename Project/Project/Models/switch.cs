@@ -14,9 +14,11 @@ namespace Project.Models
     
     public partial class @switch
     {
+
         public int id { get; set; }
         public Nullable<int> type { get; set; }
         public byte[] ip { get; set; }
+        public string location { get; set; }
         public Nullable<System.DateTime> installedOn { get; set; }
         public Nullable<bool> active { get; set; }
     }

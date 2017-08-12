@@ -1,0 +1,141 @@
+﻿
+@model IEnumerable<Project.Models.server>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@* DIV CREATED FOR TEXTBOX INPUTS FOR FILTER*@
+<div class="form-group">
+    <fieldset>
+        <legend>Search Filter</legend>
+        @{
+            using (Html.BeginForm("Filter", "Server", FormMethod.Post, new { @class = "form-inline" }))
+            {
+                // This is a CSRF (Cross Site Request Forgery) Token
+                @Html.AntiForgeryToken()
+                // BELOW ARE TEXT BOXES THAT PASS DATA THROUGH VIEWBAG
+                <label for="id">ID</label>
+                @Html.TextBox("id", (string)ViewBag.filterID)
+                <label for="os">OS</label>
+                @Html.TextBox("os", (string)ViewBag.filterOS)
+                <label for="ip1">IP1</label>
+                @Html.TextBox("ip1", (string)ViewBag.filterIP1)
+                <label for="ip2">IP2</label>
+                @Html.TextBox("ip2", (string)ViewBag.filterIP2)
+                <label for="ip3">IP3</label>
+                @Html.TextBox("ip3", (string)ViewBag.filterIP3)
+                <label for="ip4">IP4</label>
+                @Html.TextBox("ip4", (string)ViewBag.filterIP4)
+                <label for="dns">DNS</label>
+                @Html.TextBox("dns", (string)ViewBag.filterDNS)
+                <label for="network">Network</label>
+                @Html.TextBox("network", (string)ViewBag.filterNetwork)
+                <label for="roles">Roles</label>
+                @Html.TextBox("roles", (string)ViewBag.filterRoles)
+                <label for="loc">Location</label>
+                @Html.TextBox("loc", (string)ViewBag.filterLoc)
+                <label for="ins">Installed On</label>
+                @Html.TextBox("ins", (string)ViewBag.filterIns)
+                <label for="act">Active</label>
+                @Html.TextBox("act", (string)ViewBag.filterAct)
+                <input type="submit" value="Filter" class="btn btn-info pull-right" />
+            }
+        }
+    </fieldset>
+</div>
+<br />
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.os)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ip1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ip2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ip3)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ip4)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dns)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.network)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.roles)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.installedOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.active)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        // ADDED CODE TO THIS TAG TO ALLOW CLICKABLE TABLE ROWS
+        <tr onclick="location.href = '@Url.Action("Edit", "Server", new { id=item.id })'">
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.os)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ip1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ip2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ip3)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ip4)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.dns)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.network)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.roles)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.installedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.active)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

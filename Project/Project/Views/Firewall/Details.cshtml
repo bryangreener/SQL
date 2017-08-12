@@ -1,0 +1,83 @@
+﻿
+@model Project.Models.firewall
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Firewall</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.intIP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.intIP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.extIP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.extIP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dns)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dns)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.network)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.network)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.installedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.installedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
