@@ -59,7 +59,7 @@
     @foreach (var item in Model)
     {
         // ADDED CODE TO THIS TAG TO ALLOW CLICKABLE TABLE ROWS
-        <tr onclick="location.href = '@Url.Action("Edit", "Computers", new { id=item.id })'">
+        <tr onclick="location.href = '@Url.Action("Edit", "Computer", new { id=item.id })'">
             <td>
                 @Html.DisplayFor(modelItem => item.id)
             </td>

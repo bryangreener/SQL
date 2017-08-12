@@ -34,11 +34,6 @@ INSERT INTO `Devices` VALUES (1,'Computer','WMU CS Lab','2017-07-01',true),(2,'L
 /*!40000 ALTER TABLE `Devices` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TRIGGER `ComputerDelete` BEFORE DELETE ON `Computer` FOR EACH ROW
-UPDATE `Devices` SET `active`=false
-WHERE `Computer.id` = `Devices.id`;
-
-
 DROP TABLE IF EXISTS `Computer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -49,8 +44,8 @@ CREATE TABLE `Computer` (
 `installedOn` varchar(30),
 `active` bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_computer_active` (`active`),
-CONSTRAINT `FK_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE ON DELETE CASCADE
+KEY `FK_computer_active` (`active`)
+#CONSTRAINT `FK_active` FOREIGN KEY (`active`) REFERENCES `Devices` (`active`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -59,8 +54,6 @@ LOCK TABLES `Computer` WRITE;
 INSERT INTO `Computer` VALUES (1,'Windows 7 Pro','WMU CS Lab','2017-07-01',true),(2,'Windows 10','Personal','2017-07-05',true);
 /*!40000 ALTER TABLE `Computer` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -79,8 +72,8 @@ CREATE TABLE  `Server` (
 `installedOn`	varchar(30),
 `active`		bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_server_active` (`active`),
-CONSTRAINT `FK_server_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+KEY `FK_server_active` (`active`)
+#CONSTRAINT `FK_server_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,8 +87,8 @@ CREATE TABLE  `WAP` (
 `installedOn`	varchar(30),
 `active`		bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_wap_active` (`active`),
-CONSTRAINT `FK_wap_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+KEY `FK_wap_active` (`active`)
+#CONSTRAINT `FK_wap_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,8 +104,8 @@ CREATE TABLE  `Router` (
 `installedOn`	varchar(30),
 `active`		bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_router_active` (`active`),
-CONSTRAINT `FK_router_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+KEY `FK_router_active` (`active`)
+#CONSTRAINT `FK_router_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -128,8 +121,8 @@ CREATE TABLE  `Firewall` (
 `installedOn`	varchar(30),
 `active`		bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_firewall_active` (`active`),
-CONSTRAINT `FK_firewall_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+KEY `FK_firewall_active` (`active`)
+#CONSTRAINT `FK_firewall_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,8 +136,8 @@ CREATE TABLE `Switch` (
 `installedOn`	varchar(30),
 `active`		bool DEFAULT TRUE,
 PRIMARY KEY (`id`),
-KEY `FK_switch_active` (`active`),
-CONSTRAINT `FK_switch_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
+KEY `FK_switch_active` (`active`)
+#CONSTRAINT `FK_switch_active` FOREIGN KEY(`active`) REFERENCES `Devices` (`active`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

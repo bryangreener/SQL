@@ -15,7 +15,7 @@ namespace Project.Controllers
         private FinalProjectEntities db = new FinalProjectEntities();
         
         // GET: Computer
-        /*public ActionResult Index()
+        public ActionResult Index()
         {
             DbSet<computer> CompToFilter = db.computers;
             string filterID = "";
@@ -58,12 +58,9 @@ namespace Project.Controllers
                                                                         comp.installedOn.ToString() == filterIns &&
                                                                         comp.active.ToString() == filterAct);
             IEnumerable<computer> finalFiltered = filtered.ToList();
+            //return View(finalFiltered);
 
-            return View(finalFiltered);
-        }*/
-
-        public ActionResult Index()
-        {
+            // This line returns the entire db entry ignoring filter since filtering isnt working.
             return View(db.computers.ToList());
         }
 
@@ -74,7 +71,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            computer comp = db.computers.Find(id);
+            computer comp = db.computers.Find(Convert.ToInt32(id));
             if(comp == null)
             {
                 return HttpNotFound();
@@ -95,13 +92,7 @@ namespace Project.Controllers
         {
             if(ModelState.IsValid)
             {
-                /*
-                device device = new device();
-                device.id = computer.id;
-                device.type = "Computer";
-                device.location = computer.location;
-                device.installedOn = Convert.ToDateTime(computer.installedOn);
-                device.active = computer.active;*/
+                // Add new device to devices lsit with the information gathered from computer view
                 db.devices.Add(new device()
                 {
                     id = computer.id,
@@ -110,28 +101,38 @@ namespace Project.Controllers
                     installedOn = Convert.ToDateTime(computer.installedOn),
                     active = computer.active
                 });
+
+                // Save addition
                 db.SaveChanges();
-                //string device = $"{computer.id},Computer,{computer.location},{computer.installedOn},{computer.active}";
+
+                // Add device to Computer relation and save
                 db.computers.Add(computer);
-                //db.Entry(computer).State = EntityState.Added;
                 db.SaveChanges();
+
+                // Return to index page
                 return RedirectToAction("Index");
             }
+            // Returns view
             return View(computer);
         }
 
         // GET: computer/Edit/5
         public ActionResult Edit(string id)
         {
+            // Create computer object and populate with data from item in relation matching given ID
+            computer computer = db.computers.Find(Convert.ToInt32(id));
+
+            // Error handling
             if(id==null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            computer computer = db.computers.Find(id.ToString());
             if(computer == null)
             {
                 return HttpNotFound();
             }
+
+            // Return to view
             return View(computer);
         }
 
@@ -142,25 +143,57 @@ namespace Project.Controllers
         {
             if(ModelState.IsValid)
             {
+                // Get old device info before deleting it
+                var oldDev = db.devices.Find(Convert.ToInt32(computer.id));
+                string oldType = oldDev.type;
+                // delete old device
+                db.devices.Remove(oldDev);
+
+                // Modify computer row with new info gathered from edit view
                 db.Entry(computer).State = EntityState.Modified;
                 db.SaveChanges();
+
+                // Add new device with updated info from computer row
+                db.devices.Add(new device()
+                {
+                    id = computer.id,
+                    type = oldType,
+                    location = computer.location,
+                    installedOn = Convert.ToDateTime(computer.installedOn),
+                    active = computer.active
+                });
+                
+                // Save new information.
+                db.SaveChanges();
+
+                // Return to index
                 return RedirectToAction("Index");
             }
+
+            // Return view
             return View(computer);
         }
 
         // GET: computer/delete/5
         public ActionResult Delete(string id)
         {
+
+            // Error handling
             if(id==null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // Create new computer object and populate with data from db
             computer computer = db.computers.Find(Convert.ToInt32(id));
+
+            // More error handling
             if(computer == null)
             {
                 return HttpNotFound();
             }
+
+            // Return view
             return View(computer);
         }
 
@@ -169,14 +202,25 @@ namespace Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            // Create new computer and device objects and populate with db data
             computer computer = db.computers.Find(Convert.ToInt32(id));
+            device device = db.devices.Find(Convert.ToInt32(id));
+
+            // Remove computer
             db.computers.Remove(computer);
             db.SaveChanges();
+
+            // Remove device
+            db.devices.Remove(device);
+            db.SaveChanges();
+            
+            // Return to index
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
+            // Garbage collection
             if(disposing)
             {
                 db.Dispose();
