@@ -15,7 +15,7 @@ namespace Project.Controllers
         private FinalProjectEntities db = new FinalProjectEntities();
         
         // GET: Computer
-        public ActionResult Index()
+        /*public ActionResult Index()
         {
             DbSet<computer> CompToFilter = db.computers;
             string filterID = "";
@@ -60,6 +60,11 @@ namespace Project.Controllers
             IEnumerable<computer> finalFiltered = filtered.ToList();
 
             return View(finalFiltered);
+        }*/
+
+        public ActionResult Index()
+        {
+            return View(db.computers.ToList());
         }
 
         // GET: computer/details/5
@@ -122,7 +127,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            computer computer = db.computers.Find(id);
+            computer computer = db.computers.Find(id.ToString());
             if(computer == null)
             {
                 return HttpNotFound();
@@ -151,7 +156,7 @@ namespace Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            computer computer = db.computers.Find(id);
+            computer computer = db.computers.Find(Convert.ToInt32(id));
             if(computer == null)
             {
                 return HttpNotFound();
@@ -164,7 +169,7 @@ namespace Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            computer computer = db.computers.Find(id);
+            computer computer = db.computers.Find(Convert.ToInt32(id));
             db.computers.Remove(computer);
             db.SaveChanges();
             return RedirectToAction("Index");
