@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FinalProjectModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="computer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="os" Type="varchar" MaxLength="20" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="devices">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="10" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="firewall">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="intIP" Type="varchar" MaxLength="16" />
+    <Property Name="extIP" Type="varchar" MaxLength="16" />
+    <Property Name="dns" Type="varchar" MaxLength="16" />
+    <Property Name="network" Type="varchar" MaxLength="16" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="router">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="intIP" Type="varchar" MaxLength="16" />
+    <Property Name="extIP" Type="varchar" MaxLength="16" />
+    <Property Name="dns" Type="varchar" MaxLength="16" />
+    <Property Name="network" Type="varchar" MaxLength="16" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="server">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="os" Type="varchar" MaxLength="20" />
+    <Property Name="ip1" Type="varchar" MaxLength="16" />
+    <Property Name="ip2" Type="varchar" MaxLength="16" />
+    <Property Name="ip3" Type="varchar" MaxLength="16" />
+    <Property Name="ip4" Type="varchar" MaxLength="16" />
+    <Property Name="dns" Type="varchar" MaxLength="16" />
+    <Property Name="network" Type="varchar" MaxLength="16" />
+    <Property Name="roles" Type="varchar" MaxLength="50" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="switch">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="1" />
+    <Property Name="ip" Type="varchar" MaxLength="16" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityType Name="wap">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="ip" Type="varchar" MaxLength="16" />
+    <Property Name="location" Type="varchar" MaxLength="30" />
+    <Property Name="installedOn" Type="varchar" MaxLength="30" />
+    <Property Name="active" Type="bool" />
+  </EntityType>
+  <EntityContainer Name="FinalProjectModelStoreContainer">
+    <EntitySet Name="computer" EntityType="Self.computer" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="devices" EntityType="Self.devices" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="firewall" EntityType="Self.firewall" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="router" EntityType="Self.router" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="server" EntityType="Self.server" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="switch" EntityType="Self.switch" Schema="finalproject" store:Type="Tables" />
+    <EntitySet Name="wap" EntityType="Self.wap" Schema="finalproject" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

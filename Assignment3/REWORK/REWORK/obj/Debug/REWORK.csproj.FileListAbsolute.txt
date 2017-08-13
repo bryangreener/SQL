@@ -1,0 +1,6 @@
+E:\DBMS\Assignment3\REWORK\REWORK\bin\Debug\REWORK.exe.config
+E:\DBMS\Assignment3\REWORK\REWORK\bin\Debug\REWORK.exe
+E:\DBMS\Assignment3\REWORK\REWORK\bin\Debug\REWORK.pdb
+E:\DBMS\Assignment3\REWORK\REWORK\bin\Debug\MySql.Data.dll
+E:\DBMS\Assignment3\REWORK\REWORK\obj\Debug\REWORK.exe
+E:\DBMS\Assignment3\REWORK\REWORK\obj\Debug\REWORK.pdb

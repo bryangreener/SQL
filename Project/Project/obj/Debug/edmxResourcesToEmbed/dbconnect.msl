@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FinalProjectModelStoreContainer" CdmEntityContainer="FinalProjectEntities">
+    <EntitySetMapping Name="computers">
+      <EntityTypeMapping TypeName="FinalProjectModel.computer">
+        <MappingFragment StoreEntitySet="computer">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="os" ColumnName="os" />
+          <ScalarProperty Name="location" ColumnName="location" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="devices">
+      <EntityTypeMapping TypeName="FinalProjectModel.device">
+        <MappingFragment StoreEntitySet="devices">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="location" ColumnName="location" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="firewalls">
+      <EntityTypeMapping TypeName="FinalProjectModel.firewall">
+        <MappingFragment StoreEntitySet="firewall">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="intIP" ColumnName="intIP" />
+          <ScalarProperty Name="extIP" ColumnName="extIP" />
+          <ScalarProperty Name="dns" ColumnName="dns" />
+          <ScalarProperty Name="network" ColumnName="network" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="routers">
+      <EntityTypeMapping TypeName="FinalProjectModel.router">
+        <MappingFragment StoreEntitySet="router">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="intIP" ColumnName="intIP" />
+          <ScalarProperty Name="extIP" ColumnName="extIP" />
+          <ScalarProperty Name="dns" ColumnName="dns" />
+          <ScalarProperty Name="network" ColumnName="network" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="servers">
+      <EntityTypeMapping TypeName="FinalProjectModel.server">
+        <MappingFragment StoreEntitySet="server">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="os" ColumnName="os" />
+          <ScalarProperty Name="ip1" ColumnName="ip1" />
+          <ScalarProperty Name="ip2" ColumnName="ip2" />
+          <ScalarProperty Name="ip3" ColumnName="ip3" />
+          <ScalarProperty Name="ip4" ColumnName="ip4" />
+          <ScalarProperty Name="dns" ColumnName="dns" />
+          <ScalarProperty Name="network" ColumnName="network" />
+          <ScalarProperty Name="roles" ColumnName="roles" />
+          <ScalarProperty Name="location" ColumnName="location" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="switches">
+      <EntityTypeMapping TypeName="FinalProjectModel.switch">
+        <MappingFragment StoreEntitySet="switch">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="ip" ColumnName="ip" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="waps">
+      <EntityTypeMapping TypeName="FinalProjectModel.wap">
+        <MappingFragment StoreEntitySet="wap">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="ip" ColumnName="ip" />
+          <ScalarProperty Name="installedOn" ColumnName="installedOn" />
+          <ScalarProperty Name="active" ColumnName="active" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FinalProjectModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="computer">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="os" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="device">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="firewall">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="intIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="extIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="router">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="intIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="extIP" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="server">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="os" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ip1" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="ip2" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="ip3" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="ip4" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="dns" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="network" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="roles" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="switch">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="ip" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="wap">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ip" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="installedOn" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="active" Type="Boolean" />
+  </EntityType>
+  <EntityContainer Name="FinalProjectEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="computers" EntityType="Self.computer" />
+    <EntitySet Name="devices" EntityType="Self.device" />
+    <EntitySet Name="firewalls" EntityType="Self.firewall" />
+    <EntitySet Name="routers" EntityType="Self.router" />
+    <EntitySet Name="servers" EntityType="Self.server" />
+    <EntitySet Name="switches" EntityType="Self.switch" />
+    <EntitySet Name="waps" EntityType="Self.wap" />
+  </EntityContainer>
+</Schema>

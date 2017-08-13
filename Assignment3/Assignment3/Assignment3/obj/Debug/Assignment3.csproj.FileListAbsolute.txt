@@ -1,0 +1,7 @@
+E:\DBMS\Assignment3\Assignment3\Assignment3\bin\Debug\Assignment3.exe.config
+E:\DBMS\Assignment3\Assignment3\Assignment3\obj\Debug\Assignment3.csprojResolveAssemblyReference.cache
+E:\DBMS\Assignment3\Assignment3\Assignment3\bin\Debug\Assignment3.exe
+E:\DBMS\Assignment3\Assignment3\Assignment3\bin\Debug\Assignment3.pdb
+E:\DBMS\Assignment3\Assignment3\Assignment3\bin\Debug\MySql.Data.dll
+E:\DBMS\Assignment3\Assignment3\Assignment3\obj\Debug\Assignment3.exe
+E:\DBMS\Assignment3\Assignment3\Assignment3\obj\Debug\Assignment3.pdb
