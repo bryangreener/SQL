@@ -81,3 +81,4 @@ E:\DBMS\Project\Project\bin\Microsoft.Owin.Security.Twitter.xml
 E:\DBMS\Project\Project\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 E:\DBMS\Project\Project\obj\Debug\Project.dll
 E:\DBMS\Project\Project\obj\Debug\Project.pdb
+E:\DBMS\Project\Project\obj\Debug\Project.csprojResolveAssemblyReference.cache

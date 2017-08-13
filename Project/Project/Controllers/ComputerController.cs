@@ -58,6 +58,7 @@ namespace Project.Controllers
                                                                         comp.installedOn.ToString() == filterIns &&
                                                                         comp.active.ToString() == filterAct);
             IEnumerable<computer> finalFiltered = filtered.ToList();
+
             //return View(finalFiltered);
 
             // This line returns the entire db entry ignoring filter since filtering isnt working.
